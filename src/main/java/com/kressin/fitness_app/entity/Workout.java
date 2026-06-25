@@ -39,6 +39,10 @@ public class Workout {
         return exercisePlans;
     }
 
+    public List<WorkoutPlan> getWorkoutPlans() {
+        return workoutPlans;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

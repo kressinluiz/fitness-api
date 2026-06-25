@@ -4,18 +4,50 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.kressin.fitness_app.dto.ExerciseSetResponse;
+import com.kressin.fitness_app.entity.ExercisePlan;
 import com.kressin.fitness_app.entity.ExerciseSet;
+import com.kressin.fitness_app.mapper.ExerciseSetMapper;
 import com.kressin.fitness_app.repository.ExerciseSetRepository;
+import com.kressin.fitness_app.service.command.CreateExerciseSetCommand;
+import com.kressin.fitness_app.service.command.UpdateExerciseSetCommand;
 
 @Service
 public class ExerciseSetService {
-  private final ExerciseSetRepository repository;
+    private final ExerciseSetRepository exerciseSetRepo;
 
-  public ExerciseSetService(ExerciseSetRepository repository) {
-    this.repository = repository;
-  }
+    public ExerciseSetService(ExerciseSetRepository exerciseSetRepo) {
+        this.exerciseSetRepo = exerciseSetRepo;
+    }
 
-  public List<ExerciseSet> getAllSets() {
-    return repository.findAll();
-  }
+    public ExerciseSetResponse addExerciseSet(CreateExerciseSetCommand command, ExercisePlan plan) {
+        ExerciseSet set = new ExerciseSet();
+        set.setReps(command.reps());
+        set.setWeight(command.weight());
+        set.setExercisePlan(plan);
+        plan.getSets().add(set);
+
+        return ExerciseSetMapper.toResponse(set);
+    }
+
+    public ExerciseSetResponse updateExerciseSet(UpdateExerciseSetCommand command) {
+        ExerciseSet set = exerciseSetRepo.getReferenceById(command.id());
+        if (command.reps() != null) {
+            set.setReps(command.reps());
+        }
+
+        if (command.weight() != null) {
+            set.setWeight(command.weight());
+        }
+
+        return ExerciseSetMapper.toResponse(set);
+    }
+
+    public ExerciseSetResponse getExerciseSet(Long id) {
+        return ExerciseSetMapper.toResponse(exerciseSetRepo.getReferenceById(id));
+    }
+
+    public List<ExerciseSetResponse> getAllExerciseSets() {
+        return ExerciseSetMapper.toResponseList(exerciseSetRepo.findAll());
+    }
 }

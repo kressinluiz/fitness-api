@@ -22,10 +22,9 @@ public class ScheduleEntryMapper {
 
     public static UpdateScheduleEntryCommand toUpdateCommand(UpdateScheduleEntryRequest request) {
         return new UpdateScheduleEntryCommand(
-            request.id(),
-            request.weekDay(),
-            request.dateTime()
-        );
+                request.id(),
+                request.weekDay(),
+                request.dateTime());
     }
 
     public static List<UpdateScheduleEntryCommand> toUpdateCommandList(List<UpdateScheduleEntryRequest> requests) {
@@ -41,5 +40,11 @@ public class ScheduleEntryMapper {
 
     public static List<ScheduleEntryResponse> toResponseList(List<ScheduleEntry> scheduleEntries) {
         return scheduleEntries.stream().map(ScheduleEntryMapper::toResponse).toList();
+    }
+
+    public static CreateScheduleEntryCommand toCreateCommandFromUpdate(UpdateScheduleEntryCommand command) {
+        return new CreateScheduleEntryCommand(
+                command.weekDay(),
+                command.dateTime());
     }
 }

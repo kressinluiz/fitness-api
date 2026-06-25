@@ -1,5 +1,7 @@
 package com.kressin.fitness_app.mapper;
 
+import java.util.List;
+
 import com.kressin.fitness_app.dto.CreateWorkoutDateRequest;
 import com.kressin.fitness_app.dto.UpdateWorkoutDateRequest;
 import com.kressin.fitness_app.dto.WorkoutDateResponse;
@@ -16,10 +18,9 @@ public class WorkoutDateMapper {
 
     public static UpdateWorkoutDateCommand toUpdateCommand(UpdateWorkoutDateRequest request) {
         return new UpdateWorkoutDateCommand(
-            request.id(),
-            request.scheduleType(),
-            ScheduleEntryMapper.toUpdateCommandList(request.scheduleEntries())
-        );
+                request.id(),
+                request.scheduleType(),
+                ScheduleEntryMapper.toUpdateCommandList(request.scheduleEntries()));
     }
 
     public static WorkoutDateResponse toResponse(WorkoutDate workoutDate) {
@@ -27,5 +28,9 @@ public class WorkoutDateMapper {
                 workoutDate.getId(),
                 workoutDate.getScheduleType(),
                 ScheduleEntryMapper.toResponseList(workoutDate.getScheduleEntries()));
+    }
+
+    public static List<WorkoutDateResponse> toResponseList(List<WorkoutDate> workoutDates) {
+        return workoutDates.stream().map(WorkoutDateMapper::toResponse).toList();
     }
 }

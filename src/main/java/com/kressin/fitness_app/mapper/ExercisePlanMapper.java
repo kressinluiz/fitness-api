@@ -41,4 +41,10 @@ public class ExercisePlanMapper {
     public static List<UpdateExercisePlanCommand> toUpdateCommandList(List<UpdateExercisePlanRequest> plans) {
         return plans.stream().map(ExercisePlanMapper::toUpdateCommand).toList();
     }
+
+    public static CreateExercisePlanCommand toCreateCommandFromUpdateCommand(UpdateExercisePlanCommand plan) {
+        return new CreateExercisePlanCommand(
+                plan.exerciseId(),
+                ExerciseSetMapper.toCreateCommandListFromUpdateCommand(plan.sets()));
+    }
 }
