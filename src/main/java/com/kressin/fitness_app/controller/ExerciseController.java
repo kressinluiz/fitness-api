@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,12 +39,14 @@ public class ExerciseController {
     }
 
     @PostMapping
-    public ExerciseResponse addExercise(CreateExerciseRequest request) {
+    public ExerciseResponse addExercise(@RequestBody CreateExerciseRequest request) {
         return service.addExercise(ExerciseMapper.toCreateCommand(request));
     }
 
+    // I need to update this method to patch
+    // and update the service to better handle null values using JsonNullable
     @PutMapping
-    public ExerciseResponse updateExercise(UpdateExerciseRequest request) {
+    public ExerciseResponse updateExercise(@RequestBody UpdateExerciseRequest request) {
         return service.updateExercise(ExerciseMapper.toUpdateCommand(request));
     }
 

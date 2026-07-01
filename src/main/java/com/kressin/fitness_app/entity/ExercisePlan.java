@@ -1,6 +1,7 @@
 package com.kressin.fitness_app.entity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -13,39 +14,76 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class ExercisePlan {
+    @Id
+    @GeneratedValue
+    private Long id;
 
-  @Id
-  @GeneratedValue
-  private long id;
+    @ManyToOne
+    @JoinColumn(name = "exercise_id")
+    private Exercise exercise;
 
-  @ManyToOne
-  @JoinColumn(name = "exercise_id")
-  private Exercise exercise;
+    @OneToMany(mappedBy = "exercisePlan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ExerciseSet> sets = new ArrayList<>();
 
-  @OneToMany(mappedBy = "exercisePlan", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ExerciseSet> sets = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "workout_id")
+    private Workout workout;
 
-  @ManyToOne
-  @JoinColumn(name = "workout_id")
-  private Workout workout;
+    protected ExercisePlan() {
+    }
 
-  public long getId() {
-    return id;
-  }
+    public ExercisePlan(Exercise exercise, Workout workout) {
+        if (exercise == null) {
+            throw new IllegalArgumentException("ExercisePlan must have a valid Exercise");
+        }
+        if (workout == null) {
+            throw new IllegalArgumentException("ExercisePlan must have a valid Workout");
+        }
+        this.exercise = exercise;
+        this.workout = workout;
+    }
 
-  public Exercise getExercise() {
-    return exercise;
-  }
+    public long getId() {
+        return id;
+    }
 
-  public List<ExerciseSet> getSets() {
-    return sets;
-  }
+    public Exercise getExercise() {
+        return exercise;
+    }
 
-  public void setExercise(Exercise exercise) {
-    this.exercise = exercise;
-  }
+    public Workout getWorkout() {
+        return workout;
+    }
 
-  public void setWorkout(Workout workout) {
-    this.workout = workout;
-  }
+    public List<ExerciseSet> getSets() {
+        return Collections.unmodifiableList(sets);
+    }
+
+    public void addExerciseSet(ExerciseSet set) {
+        if (set == null) {
+            throw new IllegalArgumentException("ExerciseSet cannot be null");
+        }
+        this.sets.add(set);
+    }
+
+    public void removeExerciseSet(ExerciseSet set) {
+        if (set == null) {
+            throw new IllegalArgumentException("ExerciseSet cannot be null");
+        }
+        this.sets.remove(set);
+    }
+
+    public void setExercise(Exercise exercise) {
+        if (exercise == null) {
+            throw new IllegalArgumentException("ExercisePlan must have a valid Exercise");
+        }
+        this.exercise = exercise;
+    }
+
+    public void setWorkout(Workout workout) {
+        if (workout == null) {
+            throw new IllegalArgumentException("ExercisePlan must have a valid Workout");
+        }
+        this.workout = workout;
+    }
 }

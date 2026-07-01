@@ -21,12 +21,13 @@ public class ExerciseSetService {
     }
 
     public ExerciseSetResponse addExerciseSet(CreateExerciseSetCommand command, ExercisePlan plan) {
-        ExerciseSet set = new ExerciseSet();
-        set.setReps(command.reps());
-        set.setWeight(command.weight());
-        set.setExercisePlan(plan);
-        plan.getSets().add(set);
+        ExerciseSet set = new ExerciseSet(
+                command.reps(),
+                command.weight());
 
+        set.setExercisePlan(plan);
+        exerciseSetRepo.save(set);
+        plan.addExerciseSet(set);
         return ExerciseSetMapper.toResponse(set);
     }
 

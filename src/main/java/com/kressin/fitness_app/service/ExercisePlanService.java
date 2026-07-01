@@ -32,26 +32,24 @@ public class ExercisePlanService {
 
     public ExercisePlanResponse addExercisePlan(CreateExercisePlanCommand command, Workout workout) {
         Exercise exercise = exerciseRepo.getReferenceById(command.exerciseId());
-        ExercisePlan plan = new ExercisePlan();
-        plan.setExercise(exercise);
-        exercise.getExercisePlans().add(plan);
-        plan.setWorkout(workout);
-        workout.getExercisePlans().add(plan);
+        ExercisePlan plan = exercisePlanRepo.save(new ExercisePlan(exercise, workout));
 
         for (CreateExerciseSetCommand createExerciseSetCommand : command.sets()) {
             exerciseSetService.addExerciseSet(createExerciseSetCommand, plan);
         }
 
+        workout.addExercisePlan(plan);
+        exercise.addExercisePlan(plan);
         return ExercisePlanMapper.toResponse(plan);
     }
 
     public ExercisePlanResponse updateExercisePlan(UpdateExercisePlanCommand command) {
         ExercisePlan plan = exercisePlanRepo.getReferenceById(command.id());
         if (command.exerciseId() != null) {
-            plan.getExercise().getExercisePlans().remove(plan);
+            plan.getExercise().removeExercisePlan(plan);
             Exercise exercise = exerciseRepo.getReferenceById(command.exerciseId());
             plan.setExercise(exercise);
-            exercise.getExercisePlans().add(plan);
+            exercise.addExercisePlan(plan);
         }
 
         if (command.sets() != null) {

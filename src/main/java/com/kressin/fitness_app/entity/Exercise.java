@@ -1,6 +1,7 @@
 package com.kressin.fitness_app.entity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -12,7 +13,7 @@ import jakarta.persistence.OneToMany;
 public class Exercise {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String name;
     private String description;
     private String category;
@@ -21,19 +22,54 @@ public class Exercise {
     @OneToMany(mappedBy = "exercise")
     private List<ExercisePlan> exercisePlans = new ArrayList<>();
 
+    protected Exercise() {
+    }
+
+    public Exercise(String name, String description, String category, String muscleGroup) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Exercise name cannot be empty");
+        }
+        if (description == null) {
+            throw new IllegalArgumentException("Exercise description cannot be null");
+        }
+        if (category == null) {
+            throw new IllegalArgumentException("Exercise category cannot be null");
+        }
+        if (muscleGroup == null) {
+            throw new IllegalArgumentException("Exercise muscleGroup cannot be null");
+        }
+
+        this.name = name;
+        this.description = description;
+        this.category = category;
+        this.muscleGroup = muscleGroup;
+    }
+
     public void setName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Exercise name cannot be empty");
+        }
         this.name = name;
     }
 
     public void setDescription(String description) {
+        if (description == null) {
+            throw new IllegalArgumentException("Exercise description cannot be null");
+        }
         this.description = description;
     }
 
     public void setCategory(String category) {
+        if (category == null) {
+            throw new IllegalArgumentException("Exercise category cannot be null");
+        }
         this.category = category;
     }
 
     public void setMuscleGroup(String muscleGroup) {
+        if (muscleGroup == null) {
+            throw new IllegalArgumentException("Exercise muscleGroup cannot be null");
+        }
         this.muscleGroup = muscleGroup;
     }
 
@@ -58,6 +94,23 @@ public class Exercise {
     }
 
     public List<ExercisePlan> getExercisePlans() {
-        return exercisePlans;
+        return Collections.unmodifiableList(exercisePlans);
+    }
+
+    public void addExercisePlan(ExercisePlan plan) {
+        if (plan == null) {
+            throw new IllegalArgumentException("Not possible to add null ExercisePlan to Exercise");
+        }
+        exercisePlans.add(plan);
+    }
+
+    public void removeExercisePlan(ExercisePlan plan) {
+        if (plan == null) {
+            throw new IllegalArgumentException("Not possible to remove null ExercisePlan from Exercise");
+        }
+        if (!this.exercisePlans.remove(plan)) {
+            throw new IllegalArgumentException(
+                    "Why are we trying to delete an exercise plan not present in the Exercise?");
+        }
     }
 }

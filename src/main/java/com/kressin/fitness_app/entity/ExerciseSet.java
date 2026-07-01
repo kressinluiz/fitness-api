@@ -8,41 +8,64 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class ExerciseSet {
-  @Id
-  @GeneratedValue
-  private long id;
-  private Integer reps;
-  private Double weight;
+    @Id
+    @GeneratedValue
+    private Long id;
+    private Integer reps;
+    private Double weight;
 
-  @ManyToOne
-  @JoinColumn(name = "exerciseplan_id")
-  private ExercisePlan exercisePlan;
+    @ManyToOne
+    @JoinColumn(name = "exerciseplan_id")
+    private ExercisePlan exercisePlan;
 
-  public long getId() {
-    return id;
-  }
+    protected ExerciseSet() {
+    }
 
-  public void setReps(Integer reps) {
-    this.reps = reps;
-  }
+    public ExerciseSet(Integer reps, Double weight) {
+        if (reps <= 0) {
+            throw new IllegalArgumentException("ExerciseSet reps cannot be negative or zero");
+        }
+        if (weight < 0) {
+            throw new IllegalArgumentException("ExerciseSet weight cannot be negative");
+        }
+        this.reps = reps;
+        this.weight = weight;
+    }
 
-  public void setWeight(Double weight) {
-    this.weight = weight;
-  }
+    public long getId() {
+        return id;
+    }
 
-  public void setExercisePlan(ExercisePlan exercisePlan) {
-      this.exercisePlan = exercisePlan;
-  }
+    public Integer getReps() {
+        return reps;
+    }
 
-  public Integer getReps() {
-    return reps;
-  }
+    public Double getWeight() {
+        return weight;
+    }
 
-  public Double getWeight() {
-    return weight;
-  }
+    public ExercisePlan getExercisePlan() {
+        return exercisePlan;
+    }
 
-  public ExercisePlan getExercisePlan() {
-      return exercisePlan;
-  }
+    public void setReps(Integer reps) {
+        if (reps <= 0) {
+            throw new IllegalArgumentException("ExerciseSet reps cannot be negative or zero");
+        }
+        this.reps = reps;
+    }
+
+    public void setWeight(Double weight) {
+        if (weight <= 0) {
+            throw new IllegalArgumentException("ExerciseSet weight cannot be negative or zero");
+        }
+        this.weight = weight;
+    }
+
+    public void setExercisePlan(ExercisePlan plan) {
+        if (plan == null) {
+            throw new IllegalArgumentException("ExerciseSet plan cannot be null");
+        }
+        this.exercisePlan = plan;
+    }
 }

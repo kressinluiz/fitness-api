@@ -20,12 +20,12 @@ public class ExerciseService {
     }
 
     public ExerciseResponse addExercise(CreateExerciseCommand command) {
-        Exercise exercise = new Exercise();
-        exercise.setName(command.name());
-        exercise.setDescription(command.description());
-        exercise.setCategory(command.category());
-        exercise.setMuscleGroup(command.muscleGroup());
-        
+        Exercise exercise = new Exercise(
+                command.name(),
+                command.description(),
+                command.category(),
+                command.muscleGroup());
+
         return ExerciseMapper.toResponse(repository.save(exercise));
     }
 
@@ -38,10 +38,10 @@ public class ExerciseService {
             exercise.setDescription(command.description());
         }
         if (command.category() != null) {
-            exercise.setCategory(command.category());    
+            exercise.setCategory(command.category());
         }
         if (command.muscleGroup() != null) {
-           exercise.setMuscleGroup(command.muscleGroup()); 
+            exercise.setMuscleGroup(command.muscleGroup());
         }
 
         return ExerciseMapper.toResponse(repository.save(exercise));
