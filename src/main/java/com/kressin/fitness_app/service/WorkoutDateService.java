@@ -26,15 +26,11 @@ public class WorkoutDateService {
     }
 
     public WorkoutDateResponse addWorkoutDate(CreateWorkoutDateCommand command, WorkoutPlan workoutPlan) {
-        WorkoutDate workoutDate = new WorkoutDate();
+        WorkoutDate workoutDate = new WorkoutDate(workoutPlan, command.scheduleType());
 
         for (CreateScheduleEntryCommand scheduleEntryCommand : command.scheduleEntries()) {
             scheduleEntryService.addScheduleEntry(scheduleEntryCommand, workoutDate);
         }
-
-        workoutDate.setScheduleType(command.scheduleType());
-        workoutDate.setWorkoutPlan(workoutPlan);
-        workoutPlan.setWorkoutDate(workoutDate);
 
         return WorkoutDateMapper.toResponse(workoutDate);
     }

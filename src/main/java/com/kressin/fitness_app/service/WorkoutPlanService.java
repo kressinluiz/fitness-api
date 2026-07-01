@@ -27,12 +27,9 @@ public class WorkoutPlanService {
     }
 
     public WorkoutPlanResponse addWorkoutPlan(CreateWorkoutPlanCommand command) {
-        WorkoutPlan workoutPlan = new WorkoutPlan();
         Workout workout = workoutRepo.getReferenceById(command.workoutId());
-        workout.getWorkoutPlans().add(workoutPlan);
-        workoutPlan.setWorkout(workout);
+        WorkoutPlan workoutPlan = new WorkoutPlan(workout);
         workoutDateService.addWorkoutDate(command.workoutDate(), workoutPlan);
-
         return WorkoutPlanMapper.toResponse(workoutPlanRepo.save(workoutPlan));
     }
 
@@ -40,10 +37,9 @@ public class WorkoutPlanService {
         WorkoutPlan workoutPlan = workoutPlanRepo.getReferenceById(command.id());
 
         if (command.workoutId() != null) {
-            workoutPlan.getWorkout().getWorkoutPlans().remove(workoutPlan);
+            workoutPlan.getWorkout().removeWorkoutPlan(workoutPlan);
             Workout workout = workoutRepo.getReferenceById(command.workoutId());
             workoutPlan.setWorkout(workout);
-            workout.getWorkoutPlans().add(workoutPlan);
         }
 
         if (command.workoutDate() != null) {

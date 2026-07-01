@@ -1,6 +1,7 @@
 package com.kressin.fitness_app.entity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -29,6 +30,21 @@ public class WorkoutDate {
     @OneToMany(mappedBy = "workoutDate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ScheduleEntry> scheduleEntries = new ArrayList<>();
 
+    protected WorkoutDate() {
+    }
+
+    public WorkoutDate(WorkoutPlan workoutPlan, ScheduleType scheduleType) {
+        if (workoutPlan == null) {
+            throw new IllegalArgumentException("Cannot create WorkoutDate with null WorkoutPlan");
+        }
+        if (scheduleType == null) {
+            throw new IllegalArgumentException("Cannot create WorkoutDate with null ScheduleType");
+        }
+        this.scheduleType = scheduleType;
+        this.workoutPlan = workoutPlan;
+        workoutPlan.setWorkoutDate(this);
+    }
+
     public Long getId() {
         return id;
     }
@@ -42,18 +58,29 @@ public class WorkoutDate {
     }
 
     public List<ScheduleEntry> getScheduleEntries() {
-        return scheduleEntries;
+        return Collections.unmodifiableList(scheduleEntries);
     }
 
-    public void setWorkoutPlan(WorkoutPlan workoutPlan) {
-        this.workoutPlan = workoutPlan;
+    public void addScheduleEntry(ScheduleEntry entry) {
+        if (entry == null) {
+            throw new IllegalArgumentException("Cannot add null ScheduleEntry to WorkoutDate");
+        }
+        scheduleEntries.add(entry);
+    }
+
+    public void removeScheduleEntry(ScheduleEntry entry) {
+        if (entry == null) {
+            throw new IllegalArgumentException("Cannot remove null ScheduleEntry from WorkoutDate");
+        }
+        if (!scheduleEntries.remove(entry)) {
+            throw new IllegalArgumentException("Why are we trying to remove a ScheduleEntry not present in the list?");
+        }
     }
 
     public void setScheduleType(ScheduleType scheduleType) {
+        if (scheduleType == null) {
+            throw new IllegalArgumentException("Cannot create WorkoutDate with null ScheduleType");
+        }
         this.scheduleType = scheduleType;
-    }
-
-    public void setScheduleEntries(List<ScheduleEntry> scheduleEntries) {
-        this.scheduleEntries = scheduleEntries;
     }
 }

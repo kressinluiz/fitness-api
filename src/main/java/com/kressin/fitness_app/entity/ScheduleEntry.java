@@ -21,6 +21,26 @@ public class ScheduleEntry {
     private Integer weekDay;
     private ZonedDateTime dateTime;
 
+    protected ScheduleEntry() {
+    }
+
+    public ScheduleEntry(Integer weekDay, ZonedDateTime dateTime, WorkoutDate workoutDate) {
+        if (weekDay < 0 || weekDay > 7 || weekDay == null) {
+            throw new IllegalArgumentException(String.format("Invalid WeekDay for ScheduleEntry: %d", weekDay));
+        }
+        if (dateTime == null) {
+            throw new IllegalArgumentException("Null DateTime for ScheduleEntry");
+        }
+        if (workoutDate == null) {
+            throw new IllegalArgumentException("Null WorkoutDate for ScheduleEntry");
+        }
+
+        this.weekDay = weekDay;
+        this.dateTime = dateTime;
+        this.workoutDate = workoutDate;
+        workoutDate.addScheduleEntry(this);
+    }
+
     public Long getId() {
         return id;
     }
@@ -38,14 +58,16 @@ public class ScheduleEntry {
     }
 
     public void setWeekDay(Integer weekDay) {
+        if (weekDay < 0 || weekDay > 7 || weekDay == null) {
+            throw new IllegalArgumentException(String.format("Invalid WeekDay for ScheduleEntry: %d", weekDay));
+        }
         this.weekDay = weekDay;
     }
 
     public void setDateTime(ZonedDateTime dateTime) {
+        if (dateTime == null) {
+            throw new IllegalArgumentException("Null DateTime for ScheduleEntry");
+        }
         this.dateTime = dateTime;
-    }
-
-    public void setWorkoutDate(WorkoutDate workoutDate) {
-        this.workoutDate = workoutDate;
     }
 }

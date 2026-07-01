@@ -21,6 +21,17 @@ public class WorkoutPlan {
     @OneToOne(mappedBy = "workoutPlan", cascade = CascadeType.ALL, orphanRemoval = true)
     private WorkoutDate workoutDate;
 
+    protected WorkoutPlan() {
+    }
+
+    public WorkoutPlan(Workout workout) {
+        if (workout == null) {
+            throw new IllegalArgumentException("WorkoutPlan can't be created with null Workout");
+        }
+        this.workout = workout;
+        workout.addWorkoutPlan(this);
+    }
+
     public Long getId() {
         return id;
     }
@@ -34,10 +45,17 @@ public class WorkoutPlan {
     }
 
     public void setWorkout(Workout workout) {
+        if (workout == null) {
+            throw new IllegalArgumentException("Cannot set a null Workout for WorkoutPlan");
+        }
         this.workout = workout;
+        workout.addWorkoutPlan(this);
     }
 
     public void setWorkoutDate(WorkoutDate workoutDate) {
+        if (workoutDate == null) {
+            throw new IllegalArgumentException("Cannot set a null workoutDate for WorkoutPlan");
+        }
         this.workoutDate = workoutDate;
     }
 }

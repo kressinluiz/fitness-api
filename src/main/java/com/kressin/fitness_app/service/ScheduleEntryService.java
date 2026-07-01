@@ -21,11 +21,10 @@ public class ScheduleEntryService {
     }
 
     public ScheduleEntryResponse addScheduleEntry(CreateScheduleEntryCommand command, WorkoutDate workoutDate) {
-        ScheduleEntry scheduleEntry = new ScheduleEntry();
-        scheduleEntry.setWeekDay(command.weekDay());
-        scheduleEntry.setDateTime(command.dateTime());
-        scheduleEntry.setWorkoutDate(workoutDate);
-        workoutDate.getScheduleEntries().add(scheduleEntry);
+        ScheduleEntry scheduleEntry = new ScheduleEntry(
+                command.weekDay(),
+                command.dateTime(),
+                workoutDate);
         return ScheduleEntryMapper.toResponse(scheduleEntry);
     }
 

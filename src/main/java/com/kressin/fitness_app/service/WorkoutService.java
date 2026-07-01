@@ -25,14 +25,13 @@ public class WorkoutService {
     }
 
     public WorkoutResponse addWorkout(CreateWorkoutCommand command) {
-        Workout workout = new Workout();
-        workout.setName(command.name());
-        workout.setDescription(command.description());
+        Workout workout = new Workout(command.name(), command.description());
+        workout = workoutRepo.save(workout);
         for (CreateExercisePlanCommand createExercisePlanCommand : command.exercisePlans()) {
             exercisePlanService.addExercisePlan(createExercisePlanCommand, workout);
         }
 
-        return WorkoutMapper.toResponse(workoutRepo.save(workout));
+        return WorkoutMapper.toResponse(workout);
     }
 
     public WorkoutResponse updateWorkout(UpdateWorkoutCommand command) {
