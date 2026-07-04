@@ -31,11 +31,16 @@ public class ExercisePlanService {
     }
 
     public ExercisePlanResponse addExercisePlan(CreateExercisePlanCommand command, Workout workout) {
+        if (command.exerciseId() == null || !exerciseRepo.existsById(command.exerciseId())) {
+            throw new IllegalArgumentException("Exercise ID must be valid");
+        }
         Exercise exercise = exerciseRepo.getReferenceById(command.exerciseId());
         ExercisePlan plan = exercisePlanRepo.save(new ExercisePlan(exercise, workout));
 
-        for (CreateExerciseSetCommand createExerciseSetCommand : command.sets()) {
-            exerciseSetService.addExerciseSet(createExerciseSetCommand, plan);
+        if (command.sets() != null) {
+            for (CreateExerciseSetCommand createExerciseSetCommand : command.sets()) {
+                exerciseSetService.addExerciseSet(createExerciseSetCommand, plan);
+            }
         }
 
         workout.addExercisePlan(plan);
@@ -44,9 +49,15 @@ public class ExercisePlanService {
     }
 
     public ExercisePlanResponse updateExercisePlan(UpdateExercisePlanCommand command) {
+        if (command.id() == null || !exercisePlanRepo.existsById(command.id())) {
+            throw new IllegalArgumentException("ExercisePlan ID must be valid");
+        }
         ExercisePlan plan = exercisePlanRepo.getReferenceById(command.id());
-        if (command.exerciseId() != null) {
+        if (command.exerciseId() != null && command.exerciseId() != plan.getExercise().getId()) {
             plan.getExercise().removeExercisePlan(plan);
+            if (!exerciseRepo.existsById(command.exerciseId())) {
+                throw new IllegalArgumentException("Exercise ID must be valid");
+            }
             Exercise exercise = exerciseRepo.getReferenceById(command.exerciseId());
             plan.setExercise(exercise);
             exercise.addExercisePlan(plan);
@@ -66,7 +77,20 @@ public class ExercisePlanService {
         return ExercisePlanMapper.toResponse(plan);
     }
 
+    public void deleteExercisePlan(Long id) {
+        if (id == null || !exercisePlanRepo.existsById(id)) {
+            throw new IllegalArgumentException("ExercisePlan ID must be valid");
+        }
+        ExercisePlan plan = exercisePlanRepo.getReferenceById(id);
+        plan.getExercise().removeExercisePlan(plan);
+        plan.getWorkout().removeExercisePlan(plan);
+        exercisePlanRepo.deleteById(id);
+    }
+
     public ExercisePlanResponse getExercisePlan(Long id) {
+        if (id == null || !exercisePlanRepo.existsById(id)) {
+            throw new IllegalArgumentException("ExercisePlan ID must be valid");
+        }
         return ExercisePlanMapper.toResponse(exercisePlanRepo.getReferenceById(id));
     }
 

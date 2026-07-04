@@ -125,6 +125,7 @@ public class ExerciseSetServiceIntegrationTest {
 
         UpdateExerciseSetCommand updateCommand = new UpdateExerciseSetCommand(
                 addResponse.id(),
+                false,
                 20,
                 240.0);
 
@@ -148,6 +149,7 @@ public class ExerciseSetServiceIntegrationTest {
         Integer newReps = 20;
         UpdateExerciseSetCommand updateCommand = new UpdateExerciseSetCommand(
                 addResponse.id(),
+                false,
                 newReps,
                 null);
 
@@ -171,6 +173,7 @@ public class ExerciseSetServiceIntegrationTest {
         Double newWeight = 240.0;
         UpdateExerciseSetCommand updateCommand = new UpdateExerciseSetCommand(
                 addResponse.id(),
+                false,
                 20,
                 newWeight);
 
@@ -193,9 +196,10 @@ public class ExerciseSetServiceIntegrationTest {
         Long randomID = 1L;
         UpdateExerciseSetCommand updateCommand = new UpdateExerciseSetCommand(
                 randomID,
+                false,
                 20,
                 240.0);
-        assertThrows(jakarta.persistence.EntityNotFoundException.class,
+        assertThrows(IllegalArgumentException.class,
                 () -> exerciseSetService.updateExerciseSet(updateCommand));
     }
 
@@ -203,14 +207,14 @@ public class ExerciseSetServiceIntegrationTest {
     void shouldDeleteExistingExerciseSet() {
         ExerciseSetResponse addResponse = exerciseSetService.addExerciseSet(createCommand, exercisePlan);
         exerciseSetService.deleteExerciseSet(addResponse.id());
-        assertThrows(ObjectRetrievalFailureException.class, () -> exerciseSetService.getExerciseSet(addResponse.id()));
+        assertThrows(IllegalArgumentException.class, () -> exerciseSetService.getExerciseSet(addResponse.id()));
         assertEquals(0, exerciseSetService.getAllExerciseSets().size());
     }
 
     @Test
     void shouldThrowWhenGetNonExistingExerciseSet() {
         Long randomID = 1L;
-        assertThrows(EntityNotFoundException.class, () -> exerciseSetService.getExerciseSet(randomID));
+        assertThrows(IllegalArgumentException.class, () -> exerciseSetService.getExerciseSet(randomID));
     }
 
     @Test
@@ -227,7 +231,7 @@ public class ExerciseSetServiceIntegrationTest {
     }
 
     @Test
-    void shouldReturnEmptyListWhenGetAllExerciseSetsAndDatabseIsEmpty() {
+    void shouldReturnEmptyListWhenGetAllExerciseSetsAndDatabaseIsEmpty() {
         List<ExerciseSetResponse> getAllResponse = exerciseSetService.getAllExerciseSets();
         assertEquals(0, getAllResponse.size());
     }

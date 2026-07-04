@@ -32,6 +32,15 @@ public class ExerciseSetService {
     }
 
     public ExerciseSetResponse updateExerciseSet(UpdateExerciseSetCommand command) {
+        if (command.id() == null || !exerciseSetRepo.existsById(command.id())) {
+            throw new IllegalArgumentException("ExerciseSet ID must be valid");
+        }
+
+        if (command.shouldDelete() != null && command.shouldDelete()) {
+            deleteExerciseSet(command.id());
+            return null;
+        }
+
         ExerciseSet set = exerciseSetRepo.getReferenceById(command.id());
         if (command.reps() != null) {
             set.setReps(command.reps());
@@ -45,8 +54,8 @@ public class ExerciseSetService {
     }
 
     public void deleteExerciseSet(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ExerciseSet ID cant be null");
+        if (id == null || !exerciseSetRepo.existsById(id)) {
+            throw new IllegalArgumentException("ExerciseSet ID must be valid");
         }
         ExerciseSet set = exerciseSetRepo.getReferenceById(id);
         set.getExercisePlan().removeExerciseSet(set);
@@ -54,6 +63,9 @@ public class ExerciseSetService {
     }
 
     public ExerciseSetResponse getExerciseSet(Long id) {
+        if (id == null || !exerciseSetRepo.existsById(id)) {
+            throw new IllegalArgumentException("ExerciseSet ID must be valid");
+        }
         return ExerciseSetMapper.toResponse(exerciseSetRepo.getReferenceById(id));
     }
 

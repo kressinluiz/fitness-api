@@ -34,6 +34,7 @@ public class ExerciseSetMapper {
     public static UpdateExerciseSetCommand toUpdateCommand(UpdateExerciseSetRequest set) {
         return set != null ? new UpdateExerciseSetCommand(
                 set.id(),
+                set.shouldDelete(),
                 set.reps(),
                 set.weight()) : null;
     }
