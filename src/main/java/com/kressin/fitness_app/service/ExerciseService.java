@@ -30,6 +30,9 @@ public class ExerciseService {
     }
 
     public ExerciseResponse updateExercise(UpdateExerciseCommand command) {
+        if (command.id() == null) {
+            throw new IllegalArgumentException("Exercise id cant be null");
+        }
         Exercise exercise = repository.getReferenceById(command.id());
         if (command.name() != null) {
             exercise.setName(command.name());
@@ -52,6 +55,9 @@ public class ExerciseService {
     }
 
     public ExerciseResponse getExercise(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Exercise id cant be null");
+        }
         return ExerciseMapper.toResponse(repository.getReferenceById(id));
     }
 
