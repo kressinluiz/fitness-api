@@ -21,6 +21,7 @@ public class ExerciseSetUnitTests {
     private ExerciseSet set;
     private Integer reps;
     private Double weight;
+    private ExercisePlan plan;
 
     @BeforeEach
     void setUp() {
@@ -35,8 +36,8 @@ public class ExerciseSetUnitTests {
         workout = new Workout(
                 "Workout de Teste",
                 "Descrição do Workout de Teste");
-
-        set = new ExerciseSet(reps, weight);
+        plan = new ExercisePlan(exercise, workout);
+        set = new ExerciseSet(reps, weight, plan);
     }
 
     @Test
@@ -51,7 +52,8 @@ public class ExerciseSetUnitTests {
         reps = 0;
         assertThrows(IllegalArgumentException.class, () -> new ExerciseSet(
                 reps,
-                weight));
+                weight,
+                plan));
     }
 
     @Test
@@ -59,7 +61,17 @@ public class ExerciseSetUnitTests {
         weight = -0.1;
         assertThrows(IllegalArgumentException.class, () -> new ExerciseSet(
                 reps,
-                weight));
+                weight,
+                plan));
+    }
+
+    @Test
+    void shouldNotCreateWithInvalidExercisePlan() {
+        plan = null;
+        assertThrows(IllegalArgumentException.class, () -> new ExerciseSet(
+                reps,
+                weight,
+                plan));
     }
 
     @Test
@@ -86,17 +98,5 @@ public class ExerciseSetUnitTests {
     void shouldNotUpdateWithInvalidWeight() {
         weight = -1.0;
         assertThrows(IllegalArgumentException.class, () -> set.setWeight(weight));
-    }
-
-    @Test
-    void shouldUpdateExercisePlan() {
-        ExercisePlan newPlan = new ExercisePlan(exercise, workout);
-        set.setExercisePlan(newPlan);
-        assertEquals(newPlan, set.getExercisePlan());
-    }
-
-    @Test
-    void shouldNotUpdateWithInvalidExercisePlan() {
-        assertThrows(IllegalArgumentException.class, () -> set.setExercisePlan(null));
     }
 }

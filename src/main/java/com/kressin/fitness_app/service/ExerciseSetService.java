@@ -23,9 +23,9 @@ public class ExerciseSetService {
     public ExerciseSetResponse addExerciseSet(CreateExerciseSetCommand command, ExercisePlan plan) {
         ExerciseSet set = new ExerciseSet(
                 command.reps(),
-                command.weight());
+                command.weight(),
+                plan);
 
-        set.setExercisePlan(plan);
         exerciseSetRepo.save(set);
         plan.addExerciseSet(set);
         return ExerciseSetMapper.toResponse(set);
@@ -42,6 +42,15 @@ public class ExerciseSetService {
         }
 
         return ExerciseSetMapper.toResponse(set);
+    }
+
+    public void deleteExerciseSet(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ExerciseSet ID cant be null");
+        }
+        ExerciseSet set = exerciseSetRepo.getReferenceById(id);
+        set.getExercisePlan().removeExerciseSet(set);
+        exerciseSetRepo.deleteById(id);
     }
 
     public ExerciseSetResponse getExerciseSet(Long id) {

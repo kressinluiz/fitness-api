@@ -21,15 +21,19 @@ public class ExerciseSet {
     protected ExerciseSet() {
     }
 
-    public ExerciseSet(Integer reps, Double weight) {
-        if (reps <= 0) {
+    public ExerciseSet(Integer reps, Double weight, ExercisePlan plan) {
+        if (reps == null || reps <= 0) {
             throw new IllegalArgumentException("ExerciseSet reps cannot be negative or zero");
         }
-        if (weight < 0) {
+        if (weight == null || weight < 0) {
             throw new IllegalArgumentException("ExerciseSet weight cannot be negative");
+        }
+        if (plan == null) {
+            throw new IllegalArgumentException("ExerciseSet plan cannot be null");
         }
         this.reps = reps;
         this.weight = weight;
+        this.exercisePlan = plan;
     }
 
     public long getId() {
@@ -60,12 +64,5 @@ public class ExerciseSet {
             throw new IllegalArgumentException("ExerciseSet weight cannot be negative or zero");
         }
         this.weight = weight;
-    }
-
-    public void setExercisePlan(ExercisePlan plan) {
-        if (plan == null) {
-            throw new IllegalArgumentException("ExerciseSet plan cannot be null");
-        }
-        this.exercisePlan = plan;
     }
 }
