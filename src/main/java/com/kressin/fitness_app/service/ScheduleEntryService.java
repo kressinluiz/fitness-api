@@ -25,11 +25,18 @@ public class ScheduleEntryService {
                 command.weekDay(),
                 command.dateTime(),
                 workoutDate);
+        scheduleEntry = scheduleEntryRepo.save(scheduleEntry);
+        workoutDate.addScheduleEntry(scheduleEntry);
         return ScheduleEntryMapper.toResponse(scheduleEntry);
     }
 
     public ScheduleEntryResponse updateScheduleEntry(UpdateScheduleEntryCommand command) {
+        if (command.id() == null || !scheduleEntryRepo.existsById(command.id())) {
+            throw new IllegalArgumentException("ScheduleEntry ID must be valid");
+        }
+
         ScheduleEntry scheduleEntry = scheduleEntryRepo.getReferenceById(command.id());
+
         if (command.weekDay() != null) {
             scheduleEntry.setWeekDay(command.weekDay());
         }
@@ -41,7 +48,19 @@ public class ScheduleEntryService {
         return ScheduleEntryMapper.toResponse(scheduleEntry);
     }
 
+    public void deleteScheduleEntry(Long id) {
+        if (id == null || !scheduleEntryRepo.existsById(id)) {
+            throw new IllegalArgumentException("ScheduleEntry ID must be valid");
+        }
+        ScheduleEntry entry = scheduleEntryRepo.getReferenceById(id);
+        entry.getWorkoutDate().removeScheduleEntry(entry);
+        scheduleEntryRepo.deleteById(id);
+    }
+
     public ScheduleEntryResponse getScheduleEntry(Long id) {
+        if (id == null || !scheduleEntryRepo.existsById(id)) {
+            throw new IllegalArgumentException("ScheduleEntry ID must be valid");
+        }
         return ScheduleEntryMapper.toResponse(scheduleEntryRepo.getReferenceById(id));
     }
 

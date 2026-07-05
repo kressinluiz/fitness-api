@@ -81,6 +81,7 @@ public class WorkoutDateUnitTests {
                 1,
                 dateTime,
                 workoutDate);
+        workoutDate.addScheduleEntry(entry);
         workoutDate.removeScheduleEntry(entry);
         assertEquals(0, workoutDate.getScheduleEntries().size());
     }

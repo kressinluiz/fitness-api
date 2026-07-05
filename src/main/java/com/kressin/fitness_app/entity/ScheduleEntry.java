@@ -38,7 +38,6 @@ public class ScheduleEntry {
         this.weekDay = weekDay;
         this.dateTime = dateTime;
         this.workoutDate = workoutDate;
-        workoutDate.addScheduleEntry(this);
     }
 
     public Long getId() {
