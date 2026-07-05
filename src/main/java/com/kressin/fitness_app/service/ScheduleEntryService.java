@@ -21,6 +21,9 @@ public class ScheduleEntryService {
     }
 
     public ScheduleEntryResponse addScheduleEntry(CreateScheduleEntryCommand command, WorkoutDate workoutDate) {
+        if (command.weekDay() == null || command.dateTime() == null) {
+            throw new IllegalArgumentException("Create Command must have valid weekDay and dateTime");
+        }
         ScheduleEntry scheduleEntry = new ScheduleEntry(
                 command.weekDay(),
                 command.dateTime(),
@@ -33,6 +36,10 @@ public class ScheduleEntryService {
     public ScheduleEntryResponse updateScheduleEntry(UpdateScheduleEntryCommand command) {
         if (command.id() == null || !scheduleEntryRepo.existsById(command.id())) {
             throw new IllegalArgumentException("ScheduleEntry ID must be valid");
+        }
+
+        if (command.shouldDelete() != null && command.shouldDelete()) {
+            deleteScheduleEntry(command.id());
         }
 
         ScheduleEntry scheduleEntry = scheduleEntryRepo.getReferenceById(command.id());

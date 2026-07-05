@@ -25,7 +25,7 @@ public class ScheduleEntry {
     }
 
     public ScheduleEntry(Integer weekDay, ZonedDateTime dateTime, WorkoutDate workoutDate) {
-        if (weekDay < 0 || weekDay > 7 || weekDay == null) {
+        if (weekDay == null || weekDay < 0 || weekDay > 7) {
             throw new IllegalArgumentException(String.format("Invalid WeekDay for ScheduleEntry: %d", weekDay));
         }
         if (dateTime == null) {

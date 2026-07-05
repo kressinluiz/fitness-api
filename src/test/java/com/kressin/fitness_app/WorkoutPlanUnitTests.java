@@ -58,6 +58,7 @@ public class WorkoutPlanUnitTests {
         WorkoutDate newWorkoutDate = new WorkoutDate(
                 workoutPlan,
                 ScheduleType.RECURRING);
+        workoutPlan.setWorkoutDate(newWorkoutDate);
         assertEquals(newWorkoutDate, workoutPlan.getWorkoutDate());
     }
 

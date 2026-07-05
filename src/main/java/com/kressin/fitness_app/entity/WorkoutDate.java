@@ -42,7 +42,6 @@ public class WorkoutDate {
         }
         this.scheduleType = scheduleType;
         this.workoutPlan = workoutPlan;
-        workoutPlan.setWorkoutDate(this);
     }
 
     public Long getId() {

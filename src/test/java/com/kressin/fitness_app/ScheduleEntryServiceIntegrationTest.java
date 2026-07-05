@@ -74,6 +74,7 @@ public class ScheduleEntryServiceIntegrationTest {
         ScheduleEntryResponse addResponse = scheduleEntryService.addScheduleEntry(createCommand, workoutDate);
         UpdateScheduleEntryCommand updateCommand = new UpdateScheduleEntryCommand(
                 addResponse.id(),
+                null,
                 newWeekDay,
                 newDateTime);
         ScheduleEntryResponse updateResponse = scheduleEntryService.updateScheduleEntry(updateCommand);
@@ -95,6 +96,7 @@ public class ScheduleEntryServiceIntegrationTest {
         ScheduleEntryResponse addResponse = scheduleEntryService.addScheduleEntry(createCommand, workoutDate);
         UpdateScheduleEntryCommand updateCommand = new UpdateScheduleEntryCommand(
                 addResponse.id(),
+                null,
                 newWeekDay,
                 null);
         ScheduleEntryResponse updateResponse = scheduleEntryService.updateScheduleEntry(updateCommand);
@@ -117,6 +119,7 @@ public class ScheduleEntryServiceIntegrationTest {
         UpdateScheduleEntryCommand updateCommand = new UpdateScheduleEntryCommand(
                 addResponse.id(),
                 null,
+                null,
                 newDateTime);
         ScheduleEntryResponse updateResponse = scheduleEntryService.updateScheduleEntry(updateCommand);
         assertNotNull(updateResponse);
@@ -137,6 +140,7 @@ public class ScheduleEntryServiceIntegrationTest {
         ZonedDateTime newDateTime = ZonedDateTime.now();
         UpdateScheduleEntryCommand updateCommand = new UpdateScheduleEntryCommand(
                 null,
+                null,
                 newWeekDay,
                 newDateTime);
         assertThrows(IllegalArgumentException.class, () -> scheduleEntryService.updateScheduleEntry(updateCommand));
@@ -149,6 +153,7 @@ public class ScheduleEntryServiceIntegrationTest {
         ZonedDateTime newDateTime = ZonedDateTime.now();
         UpdateScheduleEntryCommand updateCommand = new UpdateScheduleEntryCommand(
                 randomID,
+                null,
                 newWeekDay,
                 newDateTime);
         assertThrows(IllegalArgumentException.class, () -> scheduleEntryService.updateScheduleEntry(updateCommand));

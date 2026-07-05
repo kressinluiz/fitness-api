@@ -23,6 +23,7 @@ public class ScheduleEntryMapper {
     public static UpdateScheduleEntryCommand toUpdateCommand(UpdateScheduleEntryRequest request) {
         return new UpdateScheduleEntryCommand(
                 request.id(),
+                request.shouldDelete(),
                 request.weekDay(),
                 request.dateTime());
     }
