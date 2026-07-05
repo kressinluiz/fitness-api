@@ -8,14 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.h2.command.dml.Update;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kressin.fitness_app.dto.ExercisePlanResponse;
-import com.kressin.fitness_app.dto.ExerciseSetResponse;
 import com.kressin.fitness_app.entity.Exercise;
 import com.kressin.fitness_app.entity.Workout;
 import com.kressin.fitness_app.repository.ExerciseRepository;
@@ -26,7 +24,6 @@ import com.kressin.fitness_app.service.command.CreateExerciseSetCommand;
 import com.kressin.fitness_app.service.command.UpdateExercisePlanCommand;
 import com.kressin.fitness_app.service.command.UpdateExerciseSetCommand;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @SpringBootTest
@@ -142,6 +139,7 @@ public class ExercisePlanServiceIntegrationTest {
 
         UpdateExercisePlanCommand updateCommand = new UpdateExercisePlanCommand(
                 createResponse.id(),
+                null,
                 newExercise.getId(),
                 updatedSets);
 
@@ -171,6 +169,7 @@ public class ExercisePlanServiceIntegrationTest {
 
         UpdateExercisePlanCommand updateCommand = new UpdateExercisePlanCommand(
                 createResponse.id(),
+                null,
                 newExercise.getId(),
                 null);
 
@@ -211,6 +210,7 @@ public class ExercisePlanServiceIntegrationTest {
         UpdateExercisePlanCommand updateCommand = new UpdateExercisePlanCommand(
                 createResponse.id(),
                 null,
+                null,
                 updatedSets);
 
         ExercisePlanResponse updateResponse = exercisePlanService.updateExercisePlan(updateCommand);
@@ -247,6 +247,7 @@ public class ExercisePlanServiceIntegrationTest {
         UpdateExercisePlanCommand updateCommand = new UpdateExercisePlanCommand(
                 createResponse.id(),
                 null,
+                null,
                 updatedSets);
 
         ExercisePlanResponse updateResponse = exercisePlanService.updateExercisePlan(updateCommand);
@@ -271,6 +272,7 @@ public class ExercisePlanServiceIntegrationTest {
 
         UpdateExercisePlanCommand updateCommand = new UpdateExercisePlanCommand(
                 createResponse.id(),
+                null,
                 null,
                 updatedSets);
 

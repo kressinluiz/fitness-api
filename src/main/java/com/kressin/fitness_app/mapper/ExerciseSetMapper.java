@@ -51,6 +51,6 @@ public class ExerciseSetMapper {
 
     public static List<CreateExerciseSetCommand> toCreateCommandListFromUpdateCommand(
             List<UpdateExerciseSetCommand> sets) {
-        return sets.stream().map(ExerciseSetMapper::toCreateCommandFromUpdateCommand).toList();
+        return sets != null ? sets.stream().map(ExerciseSetMapper::toCreateCommandFromUpdateCommand).toList() : null;
     }
 }

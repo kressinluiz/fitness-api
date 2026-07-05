@@ -21,7 +21,7 @@ public class Workout {
     @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExercisePlan> exercisePlans = new ArrayList<>();
 
-    @OneToMany(mappedBy = "workout")
+    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WorkoutPlan> workoutPlans = new ArrayList<>();
 
     protected Workout() {

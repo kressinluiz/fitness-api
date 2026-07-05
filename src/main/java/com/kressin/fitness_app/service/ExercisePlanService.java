@@ -17,6 +17,8 @@ import com.kressin.fitness_app.service.command.CreateExerciseSetCommand;
 import com.kressin.fitness_app.service.command.UpdateExercisePlanCommand;
 import com.kressin.fitness_app.service.command.UpdateExerciseSetCommand;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ExercisePlanService {
     private final ExercisePlanRepository exercisePlanRepo;
@@ -30,6 +32,7 @@ public class ExercisePlanService {
         this.exerciseSetService = exerciseSetService;
     }
 
+    @Transactional
     public ExercisePlanResponse addExercisePlan(CreateExercisePlanCommand command, Workout workout) {
         if (command.exerciseId() == null || !exerciseRepo.existsById(command.exerciseId())) {
             throw new IllegalArgumentException("Exercise ID must be valid");
@@ -48,10 +51,17 @@ public class ExercisePlanService {
         return ExercisePlanMapper.toResponse(plan);
     }
 
+    @Transactional
     public ExercisePlanResponse updateExercisePlan(UpdateExercisePlanCommand command) {
         if (command.id() == null || !exercisePlanRepo.existsById(command.id())) {
             throw new IllegalArgumentException("ExercisePlan ID must be valid");
         }
+
+        if (command.shouldDelete() != null && command.shouldDelete()) {
+            deleteExercisePlan(command.id());
+            return null;
+        }
+
         ExercisePlan plan = exercisePlanRepo.getReferenceById(command.id());
         if (command.exerciseId() != null && command.exerciseId() != plan.getExercise().getId()) {
             plan.getExercise().removeExercisePlan(plan);

@@ -1,11 +1,14 @@
 package com.kressin.fitness_app.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.kressin.fitness_app.dto.WorkoutResponse;
+import com.kressin.fitness_app.entity.ExercisePlan;
 import com.kressin.fitness_app.entity.Workout;
+import com.kressin.fitness_app.entity.WorkoutPlan;
 import com.kressin.fitness_app.mapper.ExercisePlanMapper;
 import com.kressin.fitness_app.mapper.WorkoutMapper;
 import com.kressin.fitness_app.repository.WorkoutRepository;
@@ -14,30 +17,42 @@ import com.kressin.fitness_app.service.command.CreateWorkoutCommand;
 import com.kressin.fitness_app.service.command.UpdateExercisePlanCommand;
 import com.kressin.fitness_app.service.command.UpdateWorkoutCommand;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class WorkoutService {
     private final WorkoutRepository workoutRepo;
     private final ExercisePlanService exercisePlanService;
+    private final WorkoutPlanService workoutPlanService;
 
-    public WorkoutService(WorkoutRepository workoutRepo, ExercisePlanService exercisePlanService) {
+    public WorkoutService(WorkoutRepository workoutRepo, ExercisePlanService exercisePlanService,
+            WorkoutPlanService workoutPlanService) {
         this.workoutRepo = workoutRepo;
         this.exercisePlanService = exercisePlanService;
+        this.workoutPlanService = workoutPlanService;
     }
 
+    @Transactional
     public WorkoutResponse addWorkout(CreateWorkoutCommand command) {
         Workout workout = new Workout(command.name(), command.description());
         workout = workoutRepo.save(workout);
-        for (CreateExercisePlanCommand createExercisePlanCommand : command.exercisePlans()) {
-            exercisePlanService.addExercisePlan(createExercisePlanCommand, workout);
+        if (command.exercisePlans() != null) {
+            for (CreateExercisePlanCommand createExercisePlanCommand : command.exercisePlans()) {
+                exercisePlanService.addExercisePlan(createExercisePlanCommand, workout);
+            }
         }
 
         return WorkoutMapper.toResponse(workout);
     }
 
+    @Transactional
     public WorkoutResponse updateWorkout(UpdateWorkoutCommand command) {
-        Workout workout = workoutRepo.getReferenceById(command.id()); // if this fails what happens?
+        if (command.id() == null || !workoutRepo.existsById(command.id())) {
+            throw new IllegalArgumentException("Workout ID must be valid");
+        }
+        Workout workout = workoutRepo.getReferenceById(command.id());
 
-        if (command.name() != null) {
+        if (command.name() != null && !command.name().isBlank()) {
             workout.setName(command.name());
         }
 
@@ -60,15 +75,36 @@ public class WorkoutService {
         return WorkoutMapper.toResponse(workout);
     }
 
+    @Transactional
     public List<WorkoutResponse> getAllWorkouts() {
         return WorkoutMapper.toResponseList(workoutRepo.findAll());
     }
 
     public WorkoutResponse getWorkout(Long id) {
+        if (id == null || !workoutRepo.existsById(id)) {
+            throw new IllegalArgumentException("Workout ID must be valid");
+        }
         return WorkoutMapper.toResponse(workoutRepo.getReferenceById(id));
     }
 
+    @Transactional
     public void deleteWorkout(Long id) {
+        if (id == null || !workoutRepo.existsById(id)) {
+            throw new IllegalArgumentException("Workout ID must be valid");
+        }
+
+        Workout workout = workoutRepo.getReferenceById(id);
+        if (workout.getExercisePlans() != null) {
+            for (ExercisePlan plan : new ArrayList<>(workout.getExercisePlans())) {
+                exercisePlanService.deleteExercisePlan(plan.getId());
+            }
+        }
+        if (workout.getWorkoutPlans() != null) {
+            for (WorkoutPlan plan : new ArrayList<>(workout.getWorkoutPlans())) {
+                workoutPlanService.deleteWorkoutPlan(plan.getId());
+            }
+        }
+
         workoutRepo.deleteById(id);
     }
 }

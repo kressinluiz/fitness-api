@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.orm.ObjectRetrievalFailureException;
 
 import com.kressin.fitness_app.dto.ExerciseSetResponse;
 import com.kressin.fitness_app.entity.Exercise;
@@ -23,7 +22,6 @@ import com.kressin.fitness_app.service.ExerciseSetService;
 import com.kressin.fitness_app.service.command.CreateExerciseSetCommand;
 import com.kressin.fitness_app.service.command.UpdateExerciseSetCommand;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @SpringBootTest

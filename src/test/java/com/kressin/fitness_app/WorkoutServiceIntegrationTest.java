@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.kressin.fitness_app.dto.ExercisePlanResponse;
 import com.kressin.fitness_app.dto.ExerciseResponse;
 import com.kressin.fitness_app.dto.WorkoutResponse;
 import com.kressin.fitness_app.service.ExerciseService;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -19,7 +20,7 @@ public class Exercise {
     private String category;
     private String muscleGroup;
 
-    @OneToMany(mappedBy = "exercise")
+    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExercisePlan> exercisePlans = new ArrayList<>();
 
     protected Exercise() {
@@ -73,7 +74,7 @@ public class Exercise {
         this.muscleGroup = muscleGroup;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

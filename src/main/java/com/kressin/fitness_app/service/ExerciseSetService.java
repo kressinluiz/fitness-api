@@ -12,6 +12,8 @@ import com.kressin.fitness_app.repository.ExerciseSetRepository;
 import com.kressin.fitness_app.service.command.CreateExerciseSetCommand;
 import com.kressin.fitness_app.service.command.UpdateExerciseSetCommand;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ExerciseSetService {
     private final ExerciseSetRepository exerciseSetRepo;
@@ -20,6 +22,7 @@ public class ExerciseSetService {
         this.exerciseSetRepo = exerciseSetRepo;
     }
 
+    @Transactional
     public ExerciseSetResponse addExerciseSet(CreateExerciseSetCommand command, ExercisePlan plan) {
         ExerciseSet set = new ExerciseSet(
                 command.reps(),
@@ -31,6 +34,7 @@ public class ExerciseSetService {
         return ExerciseSetMapper.toResponse(set);
     }
 
+    @Transactional
     public ExerciseSetResponse updateExerciseSet(UpdateExerciseSetCommand command) {
         if (command.id() == null || !exerciseSetRepo.existsById(command.id())) {
             throw new IllegalArgumentException("ExerciseSet ID must be valid");

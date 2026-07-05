@@ -36,7 +36,7 @@ public class ExerciseSet {
         this.exercisePlan = plan;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

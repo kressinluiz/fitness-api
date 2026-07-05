@@ -34,6 +34,7 @@ public class ExercisePlanMapper {
     public static UpdateExercisePlanCommand toUpdateCommand(UpdateExercisePlanRequest plan) {
         return plan != null ? new UpdateExercisePlanCommand(
                 plan.id(),
+                plan.shouldDelete(),
                 plan.exerciseId(),
                 ExerciseSetMapper.toUpdateCommandList(plan.sets())) : null;
     }

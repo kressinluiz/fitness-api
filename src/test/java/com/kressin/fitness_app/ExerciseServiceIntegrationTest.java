@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.orm.ObjectRetrievalFailureException;
 
 import com.kressin.fitness_app.dto.ExerciseResponse;
 import com.kressin.fitness_app.service.ExerciseService;
@@ -299,7 +298,7 @@ public class ExerciseServiceIntegrationTest {
                 newCategory,
                 newMuscleGroup);
 
-        assertThrows(jakarta.persistence.EntityNotFoundException.class,
+        assertThrows(IllegalArgumentException.class,
                 () -> exerciseService.updateExercise(updateCommand));
     }
 
@@ -315,7 +314,7 @@ public class ExerciseServiceIntegrationTest {
 
         exerciseService.deleteExercise(createResponse.id());
 
-        assertThrows(ObjectRetrievalFailureException.class,
+        assertThrows(IllegalArgumentException.class,
                 () -> exerciseService.getExercise(createResponse.id()));
         assertEquals(0, exerciseService.getAllExercises().size());
     }
@@ -344,7 +343,7 @@ public class ExerciseServiceIntegrationTest {
     @Test
     void shouldThrowWhenGetNonExistingExercise() {
         Long randomID = 1L;
-        assertThrows(jakarta.persistence.EntityNotFoundException.class,
+        assertThrows(IllegalArgumentException.class,
                 () -> exerciseService.getExercise(randomID));
     }
 

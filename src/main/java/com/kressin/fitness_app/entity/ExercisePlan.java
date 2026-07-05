@@ -43,7 +43,7 @@ public class ExercisePlan {
         this.workout = workout;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
