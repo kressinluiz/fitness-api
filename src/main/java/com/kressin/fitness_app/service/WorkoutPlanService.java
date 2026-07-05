@@ -13,6 +13,8 @@ import com.kressin.fitness_app.repository.WorkoutRepository;
 import com.kressin.fitness_app.service.command.CreateWorkoutPlanCommand;
 import com.kressin.fitness_app.service.command.UpdateWorkoutPlanCommand;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class WorkoutPlanService {
     private final WorkoutPlanRepository workoutPlanRepo;
@@ -26,14 +28,27 @@ public class WorkoutPlanService {
         this.workoutDateService = workoutDateService;
     }
 
+    @Transactional
     public WorkoutPlanResponse addWorkoutPlan(CreateWorkoutPlanCommand command) {
+        if (command.workoutId() == null || !workoutRepo.existsById(command.workoutId())) {
+            throw new IllegalArgumentException("Workout ID must be valid");
+        }
+        if (command.workoutDate() == null) {
+            throw new IllegalArgumentException("WorkoutDate create command must be valid");
+        }
+
         Workout workout = workoutRepo.getReferenceById(command.workoutId());
         WorkoutPlan workoutPlan = new WorkoutPlan(workout);
         workoutDateService.addWorkoutDate(command.workoutDate(), workoutPlan);
+
         return WorkoutPlanMapper.toResponse(workoutPlanRepo.save(workoutPlan));
     }
 
+    @Transactional
     public WorkoutPlanResponse updateWorkoutPlan(UpdateWorkoutPlanCommand command) {
+        if (command.id() == null || !workoutPlanRepo.existsById(command.id())) {
+            throw new IllegalArgumentException("WorkoutPlan ID must be valid");
+        }
         WorkoutPlan workoutPlan = workoutPlanRepo.getReferenceById(command.id());
 
         if (command.workoutId() != null) {
@@ -49,15 +64,23 @@ public class WorkoutPlanService {
         return WorkoutPlanMapper.toResponse(workoutPlan);
     }
 
+    @Transactional
     public WorkoutPlanResponse getWorkoutPlan(Long id) {
+        if (id == null || !workoutPlanRepo.existsById(id)) {
+            throw new IllegalArgumentException("WorkoutPlan ID must be valid");
+        }
         return WorkoutPlanMapper.toResponse(workoutPlanRepo.getReferenceById(id));
     }
 
-    public List<WorkoutPlanResponse> getWorkoutPlans() {
+    @Transactional
+    public List<WorkoutPlanResponse> getAllWorkoutPlans() {
         return WorkoutPlanMapper.toResponseList(workoutPlanRepo.findAll());
     }
 
     public void deleteWorkoutPlan(Long id) {
+        if (id == null || !workoutPlanRepo.existsById(id)) {
+            throw new IllegalArgumentException("WorkoutPlan ID must be valid");
+        }
         workoutPlanRepo.deleteById(id);
     }
 }
