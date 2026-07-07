@@ -19,8 +19,10 @@ import com.kressin.fitness_app.dto.UpdateExerciseRequest;
 import com.kressin.fitness_app.mapper.ExerciseMapper;
 import com.kressin.fitness_app.service.ExerciseService;
 
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("/exercise")
+@RequestMapping("/exercises")
 public class ExerciseController {
     private final ExerciseService service;
 
@@ -39,14 +41,14 @@ public class ExerciseController {
     }
 
     @PostMapping
-    public ExerciseResponse addExercise(@RequestBody CreateExerciseRequest request) {
+    public ExerciseResponse addExercise(@Valid @RequestBody CreateExerciseRequest request) {
         return service.addExercise(ExerciseMapper.toCreateCommand(request));
     }
 
     // I need to update this method to patch
     // and update the service to better handle null values using JsonNullable
     @PutMapping
-    public ExerciseResponse updateExercise(@RequestBody UpdateExerciseRequest request) {
+    public ExerciseResponse updateExercise(@Valid @RequestBody UpdateExerciseRequest request) {
         return service.updateExercise(ExerciseMapper.toUpdateCommand(request));
     }
 

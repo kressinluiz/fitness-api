@@ -1,6 +1,8 @@
 package com.kressin.fitness_app.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 public record CreateExerciseSetRequest(
-        Integer reps,
-        Double weight) {
+        @NotNull Integer reps,
+        @NotNull Double weight) {
 }

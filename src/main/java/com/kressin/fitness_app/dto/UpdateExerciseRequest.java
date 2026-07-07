@@ -1,9 +1,11 @@
 package com.kressin.fitness_app.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 public record UpdateExerciseRequest(
-    Long   id,
-    String name,
-    String description,
-    String category,
-    String muscleGroup
-) {}
+        @NotNull Long id,
+        String name,
+        String description,
+        String category,
+        String muscleGroup) {
+}

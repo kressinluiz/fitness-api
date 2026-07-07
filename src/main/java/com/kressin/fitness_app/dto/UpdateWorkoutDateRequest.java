@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.kressin.fitness_app.entity.ScheduleType;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 public record UpdateWorkoutDateRequest(
-    Long id,
-    ScheduleType scheduleType,
-    List<UpdateScheduleEntryRequest> scheduleEntries
-) {
-    
+        @NotNull Long id,
+        ScheduleType scheduleType,
+        @Valid List<UpdateScheduleEntryRequest> scheduleEntries) {
+
 }

@@ -19,6 +19,8 @@ import com.kressin.fitness_app.dto.WorkoutPlanResponse;
 import com.kressin.fitness_app.mapper.WorkoutPlanMapper;
 import com.kressin.fitness_app.service.WorkoutPlanService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/planner")
 public class WorkoutPlanController {
@@ -29,12 +31,12 @@ public class WorkoutPlanController {
     }
 
     @PostMapping
-    public WorkoutPlanResponse addWorkoutPlan(@RequestBody CreateWorkoutPlanRequest request) {
+    public WorkoutPlanResponse addWorkoutPlan(@Valid @RequestBody CreateWorkoutPlanRequest request) {
         return service.addWorkoutPlan(WorkoutPlanMapper.toCreateCommand(request));
     }
 
     @PatchMapping
-    public WorkoutPlanResponse updateWorkoutPlan(@RequestBody UpdateWorkoutPlanRequest request) {
+    public WorkoutPlanResponse updateWorkoutPlan(@Valid @RequestBody UpdateWorkoutPlanRequest request) {
         return service.updateWorkoutPlan(WorkoutPlanMapper.toUpdateCommand(request));
     }
 
@@ -51,6 +53,6 @@ public class WorkoutPlanController {
 
     @GetMapping
     public List<WorkoutPlanResponse> getWorkoutPlans() {
-        return service.getWorkoutPlans();
+        return service.getAllWorkoutPlans();
     }
 }

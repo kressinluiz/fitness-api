@@ -2,9 +2,12 @@ package com.kressin.fitness_app.dto;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 public record UpdateWorkoutRequest(
-        Long id,
+        @NotNull Long id,
         String name,
         String description,
-        List<UpdateExercisePlanRequest> exercisePlans) {
+        @Valid List<UpdateExercisePlanRequest> exercisePlans) {
 }
