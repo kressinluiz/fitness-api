@@ -29,9 +29,9 @@ public class WorkoutMapper {
                 ExercisePlanMapper.toCreateCommandList(workout.exercisePlans()));
     }
 
-    public static UpdateWorkoutCommand toUpdateCommand(UpdateWorkoutRequest workout) {
+    public static UpdateWorkoutCommand toUpdateCommand(UpdateWorkoutRequest workout, Long id) {
         return new UpdateWorkoutCommand(
-                workout.id(),
+                id,
                 workout.name(),
                 workout.description(),
                 workout.exercisePlans() != null ? ExercisePlanMapper.toUpdateCommandList(workout.exercisePlans())

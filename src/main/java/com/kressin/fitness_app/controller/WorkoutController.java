@@ -2,15 +2,15 @@ package com.kressin.fitness_app.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kressin.fitness_app.dto.CreateWorkoutRequest;
@@ -31,17 +31,18 @@ public class WorkoutController {
     }
 
     @PostMapping
-    public WorkoutResponse addWorkout(@Valid @RequestBody CreateWorkoutRequest request) {
-        return service.addWorkout(WorkoutMapper.toCreateCommand(request));
+    public ResponseEntity<WorkoutResponse> addWorkout(@Valid @RequestBody CreateWorkoutRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.addWorkout(WorkoutMapper.toCreateCommand(request)));
     }
 
-    @PutMapping
-    public WorkoutResponse updateWorkout(@Valid @RequestBody UpdateWorkoutRequest request) {
-        return service.updateWorkout(WorkoutMapper.toUpdateCommand(request));
+    @PatchMapping("/{id}")
+    public WorkoutResponse updateWorkout(@PathVariable Long id, @Valid @RequestBody UpdateWorkoutRequest request) {
+        return service.updateWorkout(WorkoutMapper.toUpdateCommand(request, id));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteWorkout(@RequestParam Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteWorkout(@PathVariable Long id) {
         service.deleteWorkout(id);
         return ResponseEntity.noContent().build();
     }
@@ -51,9 +52,6 @@ public class WorkoutController {
         return service.getWorkout(id);
     }
 
-    // maybe return a response with only id, name, description
-    // if user hits to see details of the workout,
-    // we map a getWorkout(id) with all the details.
     @GetMapping
     public List<WorkoutResponse> getWorkouts() {
         return service.getAllWorkouts();

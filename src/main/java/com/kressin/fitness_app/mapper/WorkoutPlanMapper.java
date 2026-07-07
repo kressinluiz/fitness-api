@@ -16,12 +16,11 @@ public class WorkoutPlanMapper {
                 WorkoutDateMapper.toCreateCommand(request.workoutDate()));
     }
 
-    public static UpdateWorkoutPlanCommand toUpdateCommand(UpdateWorkoutPlanRequest request) {
+    public static UpdateWorkoutPlanCommand toUpdateCommand(UpdateWorkoutPlanRequest request, Long id) {
         return new UpdateWorkoutPlanCommand(
-            request.id(),
-            request.workoutId(),
-            WorkoutDateMapper.toUpdateCommand(request.workoutDate())
-        );
+                id,
+                request.workoutId(),
+                WorkoutDateMapper.toUpdateCommand(request.workoutDate()));
     }
 
     public static WorkoutPlanResponse toResponse(WorkoutPlan plan) {
