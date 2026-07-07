@@ -15,6 +15,8 @@ import com.kressin.fitness_app.dto.ExerciseSetResponse;
 import com.kressin.fitness_app.entity.Exercise;
 import com.kressin.fitness_app.entity.ExercisePlan;
 import com.kressin.fitness_app.entity.Workout;
+import com.kressin.fitness_app.exception.BusinessException;
+import com.kressin.fitness_app.exception.ExerciseSetNotFoundException;
 import com.kressin.fitness_app.repository.ExercisePlanRepository;
 import com.kressin.fitness_app.repository.ExerciseRepository;
 import com.kressin.fitness_app.repository.WorkoutRepository;
@@ -76,7 +78,7 @@ public class ExerciseSetServiceIntegrationTest {
     void shouldNotAddExerciseSetWithNullReps() {
         reps = null;
         createCommand = new CreateExerciseSetCommand(reps, weight);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessException.class,
                 () -> exerciseSetService.addExerciseSet(createCommand, exercisePlan));
         assertEquals(0, exerciseSetService.getAllExerciseSets().size());
     }
@@ -85,7 +87,7 @@ public class ExerciseSetServiceIntegrationTest {
     void shouldNotAddExerciseSetWithInvalidReps() {
         reps = -1;
         createCommand = new CreateExerciseSetCommand(reps, weight);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessException.class,
                 () -> exerciseSetService.addExerciseSet(createCommand, exercisePlan));
         assertEquals(0, exerciseSetService.getAllExerciseSets().size());
     }
@@ -94,7 +96,7 @@ public class ExerciseSetServiceIntegrationTest {
     void shouldNotAddExerciseSetWithNullWeight() {
         weight = null;
         createCommand = new CreateExerciseSetCommand(reps, weight);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessException.class,
                 () -> exerciseSetService.addExerciseSet(createCommand, exercisePlan));
         assertEquals(0, exerciseSetService.getAllExerciseSets().size());
     }
@@ -103,7 +105,7 @@ public class ExerciseSetServiceIntegrationTest {
     void shouldNotAddExerciseSetWithInvalidWeight() {
         weight = -1.0;
         createCommand = new CreateExerciseSetCommand(reps, weight);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessException.class,
                 () -> exerciseSetService.addExerciseSet(createCommand, exercisePlan));
         assertEquals(0, exerciseSetService.getAllExerciseSets().size());
     }
@@ -112,7 +114,7 @@ public class ExerciseSetServiceIntegrationTest {
     void shouldNotAddExerciseSetWithNullPlan() {
         exercisePlan = null;
         createCommand = new CreateExerciseSetCommand(reps, weight);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessException.class,
                 () -> exerciseSetService.addExerciseSet(createCommand, exercisePlan));
         assertEquals(0, exerciseSetService.getAllExerciseSets().size());
     }
@@ -197,7 +199,7 @@ public class ExerciseSetServiceIntegrationTest {
                 false,
                 20,
                 240.0);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ExerciseSetNotFoundException.class,
                 () -> exerciseSetService.updateExerciseSet(updateCommand));
     }
 
@@ -205,14 +207,14 @@ public class ExerciseSetServiceIntegrationTest {
     void shouldDeleteExistingExerciseSet() {
         ExerciseSetResponse addResponse = exerciseSetService.addExerciseSet(createCommand, exercisePlan);
         exerciseSetService.deleteExerciseSet(addResponse.id());
-        assertThrows(IllegalArgumentException.class, () -> exerciseSetService.getExerciseSet(addResponse.id()));
+        assertThrows(ExerciseSetNotFoundException.class, () -> exerciseSetService.getExerciseSet(addResponse.id()));
         assertEquals(0, exerciseSetService.getAllExerciseSets().size());
     }
 
     @Test
     void shouldThrowWhenGetNonExistingExerciseSet() {
         Long randomID = 1L;
-        assertThrows(IllegalArgumentException.class, () -> exerciseSetService.getExerciseSet(randomID));
+        assertThrows(ExerciseSetNotFoundException.class, () -> exerciseSetService.getExerciseSet(randomID));
     }
 
     @Test

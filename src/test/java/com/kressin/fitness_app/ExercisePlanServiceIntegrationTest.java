@@ -16,6 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.kressin.fitness_app.dto.ExercisePlanResponse;
 import com.kressin.fitness_app.entity.Exercise;
 import com.kressin.fitness_app.entity.Workout;
+import com.kressin.fitness_app.exception.BusinessException;
+import com.kressin.fitness_app.exception.ExercisePlanNotFoundException;
 import com.kressin.fitness_app.repository.ExerciseRepository;
 import com.kressin.fitness_app.repository.WorkoutRepository;
 import com.kressin.fitness_app.service.ExercisePlanService;
@@ -96,7 +98,7 @@ public class ExercisePlanServiceIntegrationTest {
     @Test
     void shouldNotCreateExercisePlanWithNullWorkout() {
         workout = null;
-        assertThrows(IllegalArgumentException.class, () -> exercisePlanService.addExercisePlan(createCommand, workout));
+        assertThrows(BusinessException.class, () -> exercisePlanService.addExercisePlan(createCommand, workout));
     }
 
     @Test
@@ -104,7 +106,7 @@ public class ExercisePlanServiceIntegrationTest {
         createCommand = new CreateExercisePlanCommand(
                 null,
                 sets);
-        assertThrows(IllegalArgumentException.class, () -> exercisePlanService.addExercisePlan(createCommand, workout));
+        assertThrows(BusinessException.class, () -> exercisePlanService.addExercisePlan(createCommand, workout));
     }
 
     @Test
@@ -112,7 +114,7 @@ public class ExercisePlanServiceIntegrationTest {
         createCommand = new CreateExercisePlanCommand(
                 333L,
                 sets);
-        assertThrows(IllegalArgumentException.class, () -> exercisePlanService.addExercisePlan(createCommand, workout));
+        assertThrows(BusinessException.class, () -> exercisePlanService.addExercisePlan(createCommand, workout));
     }
 
     @Test
@@ -289,19 +291,20 @@ public class ExercisePlanServiceIntegrationTest {
     void shouldDeleteExercisePlan() {
         ExercisePlanResponse createResponse = exercisePlanService.addExercisePlan(createCommand, workout);
         exercisePlanService.deleteExercisePlan(createResponse.id());
-        assertThrows(IllegalArgumentException.class, () -> exercisePlanService.getExercisePlan(createResponse.id()));
+        assertThrows(ExercisePlanNotFoundException.class,
+                () -> exercisePlanService.getExercisePlan(createResponse.id()));
         assertEquals(0, exercisePlanService.getAllExercisePlans().size());
     }
 
     @Test
     void shouldThrowDeletingExercisePlanWithNullID() {
-        assertThrows(IllegalArgumentException.class, () -> exercisePlanService.deleteExercisePlan(null));
+        assertThrows(ExercisePlanNotFoundException.class, () -> exercisePlanService.deleteExercisePlan(null));
     }
 
     @Test
     void shouldThrowDeletingInvalidExercisePlan() {
         Long randomID = 333L;
-        assertThrows(IllegalArgumentException.class, () -> exercisePlanService.deleteExercisePlan(randomID));
+        assertThrows(ExercisePlanNotFoundException.class, () -> exercisePlanService.deleteExercisePlan(randomID));
     }
 
     @Test
@@ -318,13 +321,13 @@ public class ExercisePlanServiceIntegrationTest {
 
     @Test
     void shouldThrowWhenGetNullPlanID() {
-        assertThrows(IllegalArgumentException.class, () -> exercisePlanService.getExercisePlan(null));
+        assertThrows(ExercisePlanNotFoundException.class, () -> exercisePlanService.getExercisePlan(null));
     }
 
     @Test
     void shouldThrowWhenGetInvalidPlanID() {
         Long randomID = 333L;
-        assertThrows(IllegalArgumentException.class, () -> exercisePlanService.getExercisePlan(randomID));
+        assertThrows(ExercisePlanNotFoundException.class, () -> exercisePlanService.getExercisePlan(randomID));
     }
 
     @Test

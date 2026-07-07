@@ -13,6 +13,7 @@ import com.kressin.fitness_app.entity.ScheduleType;
 import com.kressin.fitness_app.entity.Workout;
 import com.kressin.fitness_app.entity.WorkoutDate;
 import com.kressin.fitness_app.entity.WorkoutPlan;
+import com.kressin.fitness_app.exception.BusinessException;
 
 @ExtendWith(MockitoExtension.class)
 public class WorkoutPlanUnitTests {
@@ -36,7 +37,7 @@ public class WorkoutPlanUnitTests {
 
     @Test
     void shouldNotCreateWithNullWorkout() {
-        assertThrows(IllegalArgumentException.class, () -> new WorkoutPlan(null));
+        assertThrows(BusinessException.class, () -> new WorkoutPlan(null));
     }
 
     @Test
@@ -50,7 +51,7 @@ public class WorkoutPlanUnitTests {
 
     @Test
     void shouldNotSetWithNullWorkout() {
-        assertThrows(IllegalArgumentException.class, () -> workoutPlan.setWorkout(null));
+        assertThrows(BusinessException.class, () -> workoutPlan.setWorkout(null));
     }
 
     @Test
@@ -64,6 +65,6 @@ public class WorkoutPlanUnitTests {
 
     @Test
     void shouldNotSetWithNullWorkoutDate() {
-        assertThrows(IllegalArgumentException.class, () -> workoutPlan.setWorkoutDate(null));
+        assertThrows(BusinessException.class, () -> workoutPlan.setWorkoutDate(null));
     }
 }

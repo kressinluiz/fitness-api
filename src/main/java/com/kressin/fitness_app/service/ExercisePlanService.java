@@ -8,6 +8,8 @@ import com.kressin.fitness_app.dto.ExercisePlanResponse;
 import com.kressin.fitness_app.entity.Exercise;
 import com.kressin.fitness_app.entity.ExercisePlan;
 import com.kressin.fitness_app.entity.Workout;
+import com.kressin.fitness_app.exception.BusinessException;
+import com.kressin.fitness_app.exception.ExercisePlanNotFoundException;
 import com.kressin.fitness_app.mapper.ExercisePlanMapper;
 import com.kressin.fitness_app.mapper.ExerciseSetMapper;
 import com.kressin.fitness_app.repository.ExercisePlanRepository;
@@ -35,7 +37,7 @@ public class ExercisePlanService {
     @Transactional
     public ExercisePlanResponse addExercisePlan(CreateExercisePlanCommand command, Workout workout) {
         if (command.exerciseId() == null || !exerciseRepo.existsById(command.exerciseId())) {
-            throw new IllegalArgumentException("Exercise ID must be valid");
+            throw new BusinessException("Exercise ID must be valid");
         }
         Exercise exercise = exerciseRepo.getReferenceById(command.exerciseId());
         ExercisePlan plan = exercisePlanRepo.save(new ExercisePlan(exercise, workout));
@@ -54,7 +56,7 @@ public class ExercisePlanService {
     @Transactional
     public ExercisePlanResponse updateExercisePlan(UpdateExercisePlanCommand command) {
         if (command.id() == null || !exercisePlanRepo.existsById(command.id())) {
-            throw new IllegalArgumentException("ExercisePlan ID must be valid");
+            throw new ExercisePlanNotFoundException(command.id());
         }
 
         if (command.shouldDelete() != null && command.shouldDelete()) {
@@ -66,7 +68,7 @@ public class ExercisePlanService {
         if (command.exerciseId() != null && command.exerciseId() != plan.getExercise().getId()) {
             plan.getExercise().removeExercisePlan(plan);
             if (!exerciseRepo.existsById(command.exerciseId())) {
-                throw new IllegalArgumentException("Exercise ID must be valid");
+                throw new BusinessException("Exercise ID must be valid");
             }
             Exercise exercise = exerciseRepo.getReferenceById(command.exerciseId());
             plan.setExercise(exercise);
@@ -89,7 +91,7 @@ public class ExercisePlanService {
 
     public void deleteExercisePlan(Long id) {
         if (id == null || !exercisePlanRepo.existsById(id)) {
-            throw new IllegalArgumentException("ExercisePlan ID must be valid");
+            throw new ExercisePlanNotFoundException(id);
         }
         ExercisePlan plan = exercisePlanRepo.getReferenceById(id);
         plan.getExercise().removeExercisePlan(plan);
@@ -99,7 +101,7 @@ public class ExercisePlanService {
 
     public ExercisePlanResponse getExercisePlan(Long id) {
         if (id == null || !exercisePlanRepo.existsById(id)) {
-            throw new IllegalArgumentException("ExercisePlan ID must be valid");
+            throw new ExercisePlanNotFoundException(id);
         }
         return ExercisePlanMapper.toResponse(exercisePlanRepo.getReferenceById(id));
     }

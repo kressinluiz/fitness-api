@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kressin.fitness_app.dto.ExerciseResponse;
 import com.kressin.fitness_app.dto.WorkoutResponse;
+import com.kressin.fitness_app.exception.BusinessException;
+import com.kressin.fitness_app.exception.WorkoutNotFoundException;
 import com.kressin.fitness_app.service.ExerciseService;
 import com.kressin.fitness_app.service.WorkoutService;
 import com.kressin.fitness_app.service.command.CreateExerciseCommand;
@@ -119,7 +121,7 @@ public class WorkoutServiceIntegrationTest {
                 name,
                 description,
                 plans);
-        assertThrows(IllegalArgumentException.class, () -> workoutService.addWorkout(createCommand));
+        assertThrows(BusinessException.class, () -> workoutService.addWorkout(createCommand));
         assertEquals(0, workoutService.getAllWorkouts().size());
     }
 
@@ -292,14 +294,14 @@ public class WorkoutServiceIntegrationTest {
     @Test
     @Transactional
     void shouldNotGetWorkoutWithNullID() {
-        assertThrows(IllegalArgumentException.class, () -> workoutService.getWorkout(null));
+        assertThrows(WorkoutNotFoundException.class, () -> workoutService.getWorkout(null));
     }
 
     @Test
     @Transactional
     void shouldNotGetWorkoutWithInvalidID() {
         Long randomID = 333L;
-        assertThrows(IllegalArgumentException.class, () -> workoutService.getWorkout(randomID));
+        assertThrows(WorkoutNotFoundException.class, () -> workoutService.getWorkout(randomID));
     }
 
     @Test
@@ -328,20 +330,20 @@ public class WorkoutServiceIntegrationTest {
     void shouldDeleteWorkout() {
         WorkoutResponse createResponse = workoutService.addWorkout(createCommand);
         workoutService.deleteWorkout(createResponse.id());
-        assertThrows(IllegalArgumentException.class, () -> workoutService.getWorkout(createResponse.id()));
+        assertThrows(WorkoutNotFoundException.class, () -> workoutService.getWorkout(createResponse.id()));
         assertEquals(0, workoutService.getAllWorkouts().size());
     }
 
     @Test
     @Transactional
     void shouldNotDeleteNullID() {
-        assertThrows(IllegalArgumentException.class, () -> workoutService.deleteWorkout(null));
+        assertThrows(WorkoutNotFoundException.class, () -> workoutService.deleteWorkout(null));
     }
 
     @Test
     @Transactional
     void shouldNotDeleteInvalidWorkout() {
         Long randomID = 333L;
-        assertThrows(IllegalArgumentException.class, () -> workoutService.deleteWorkout(randomID));
+        assertThrows(WorkoutNotFoundException.class, () -> workoutService.deleteWorkout(randomID));
     }
 }

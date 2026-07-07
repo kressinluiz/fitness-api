@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.kressin.fitness_app.dto.ScheduleEntryResponse;
 import com.kressin.fitness_app.entity.ScheduleEntry;
 import com.kressin.fitness_app.entity.WorkoutDate;
+import com.kressin.fitness_app.exception.BusinessException;
+import com.kressin.fitness_app.exception.ScheduleEntryNotFoundException;
 import com.kressin.fitness_app.mapper.ScheduleEntryMapper;
 import com.kressin.fitness_app.repository.ScheduleEntryRepository;
 import com.kressin.fitness_app.service.command.CreateScheduleEntryCommand;
@@ -22,7 +24,7 @@ public class ScheduleEntryService {
 
     public ScheduleEntryResponse addScheduleEntry(CreateScheduleEntryCommand command, WorkoutDate workoutDate) {
         if (command.weekDay() == null || command.dateTime() == null) {
-            throw new IllegalArgumentException("Create Command must have valid weekDay and dateTime");
+            throw new BusinessException("Create Command must have valid weekDay and dateTime");
         }
         ScheduleEntry scheduleEntry = new ScheduleEntry(
                 command.weekDay(),
@@ -35,7 +37,7 @@ public class ScheduleEntryService {
 
     public ScheduleEntryResponse updateScheduleEntry(UpdateScheduleEntryCommand command) {
         if (command.id() == null || !scheduleEntryRepo.existsById(command.id())) {
-            throw new IllegalArgumentException("ScheduleEntry ID must be valid");
+            throw new ScheduleEntryNotFoundException(command.id());
         }
 
         if (command.shouldDelete() != null && command.shouldDelete()) {
@@ -57,7 +59,7 @@ public class ScheduleEntryService {
 
     public void deleteScheduleEntry(Long id) {
         if (id == null || !scheduleEntryRepo.existsById(id)) {
-            throw new IllegalArgumentException("ScheduleEntry ID must be valid");
+            throw new ScheduleEntryNotFoundException(id);
         }
         ScheduleEntry entry = scheduleEntryRepo.getReferenceById(id);
         entry.getWorkoutDate().removeScheduleEntry(entry);
@@ -66,7 +68,7 @@ public class ScheduleEntryService {
 
     public ScheduleEntryResponse getScheduleEntry(Long id) {
         if (id == null || !scheduleEntryRepo.existsById(id)) {
-            throw new IllegalArgumentException("ScheduleEntry ID must be valid");
+            throw new ScheduleEntryNotFoundException(id);
         }
         return ScheduleEntryMapper.toResponse(scheduleEntryRepo.getReferenceById(id));
     }

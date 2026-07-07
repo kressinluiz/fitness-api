@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.kressin.fitness_app.dto.ExerciseResponse;
 import com.kressin.fitness_app.entity.Exercise;
+import com.kressin.fitness_app.exception.ExerciseNotFoundException;
 import com.kressin.fitness_app.mapper.ExerciseMapper;
 import com.kressin.fitness_app.repository.ExerciseRepository;
 import com.kressin.fitness_app.service.command.CreateExerciseCommand;
@@ -31,7 +32,7 @@ public class ExerciseService {
 
     public ExerciseResponse updateExercise(UpdateExerciseCommand command) {
         if (command.id() == null || !repository.existsById(command.id())) {
-            throw new IllegalArgumentException("Exercise id must be valid");
+            throw new ExerciseNotFoundException(command.id());
         }
         Exercise exercise = repository.getReferenceById(command.id());
         if (command.name() != null) {
@@ -52,14 +53,14 @@ public class ExerciseService {
 
     public void deleteExercise(Long id) {
         if (id == null || !repository.existsById(id)) {
-            throw new IllegalArgumentException("Exercise id must be valid");
+            throw new ExerciseNotFoundException(id);
         }
         repository.deleteById(id);
     }
 
     public ExerciseResponse getExercise(Long id) {
         if (id == null || !repository.existsById(id)) {
-            throw new IllegalArgumentException("Exercise id must be valid");
+            throw new ExerciseNotFoundException(id);
         }
         return ExerciseMapper.toResponse(repository.getReferenceById(id));
     }

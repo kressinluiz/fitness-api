@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.kressin.fitness_app.dto.WorkoutPlanResponse;
 import com.kressin.fitness_app.entity.Workout;
 import com.kressin.fitness_app.entity.WorkoutPlan;
+import com.kressin.fitness_app.exception.BusinessException;
+import com.kressin.fitness_app.exception.WorkoutPlanNotFoundException;
 import com.kressin.fitness_app.mapper.WorkoutPlanMapper;
 import com.kressin.fitness_app.repository.WorkoutPlanRepository;
 import com.kressin.fitness_app.repository.WorkoutRepository;
@@ -31,10 +33,10 @@ public class WorkoutPlanService {
     @Transactional
     public WorkoutPlanResponse addWorkoutPlan(CreateWorkoutPlanCommand command) {
         if (command.workoutId() == null || !workoutRepo.existsById(command.workoutId())) {
-            throw new IllegalArgumentException("Workout ID must be valid");
+            throw new BusinessException("Workout ID must be valid");
         }
         if (command.workoutDate() == null) {
-            throw new IllegalArgumentException("WorkoutDate create command must be valid");
+            throw new BusinessException("WorkoutDate create command must be valid");
         }
 
         Workout workout = workoutRepo.getReferenceById(command.workoutId());
@@ -47,7 +49,7 @@ public class WorkoutPlanService {
     @Transactional
     public WorkoutPlanResponse updateWorkoutPlan(UpdateWorkoutPlanCommand command) {
         if (command.id() == null || !workoutPlanRepo.existsById(command.id())) {
-            throw new IllegalArgumentException("WorkoutPlan ID must be valid");
+            throw new WorkoutPlanNotFoundException(command.id());
         }
         WorkoutPlan workoutPlan = workoutPlanRepo.getReferenceById(command.id());
 
@@ -67,7 +69,7 @@ public class WorkoutPlanService {
     @Transactional
     public WorkoutPlanResponse getWorkoutPlan(Long id) {
         if (id == null || !workoutPlanRepo.existsById(id)) {
-            throw new IllegalArgumentException("WorkoutPlan ID must be valid");
+            throw new WorkoutPlanNotFoundException(id);
         }
         return WorkoutPlanMapper.toResponse(workoutPlanRepo.getReferenceById(id));
     }
@@ -79,7 +81,7 @@ public class WorkoutPlanService {
 
     public void deleteWorkoutPlan(Long id) {
         if (id == null || !workoutPlanRepo.existsById(id)) {
-            throw new IllegalArgumentException("WorkoutPlan ID must be valid");
+            throw new WorkoutPlanNotFoundException(id);
         }
         workoutPlanRepo.deleteById(id);
     }

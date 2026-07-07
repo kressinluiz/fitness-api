@@ -1,5 +1,7 @@
 package com.kressin.fitness_app.entity;
 
+import com.kressin.fitness_app.exception.BusinessException;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +28,7 @@ public class WorkoutPlan {
 
     public WorkoutPlan(Workout workout) {
         if (workout == null) {
-            throw new IllegalArgumentException("WorkoutPlan can't be created with null Workout");
+            throw new BusinessException("WorkoutPlan can't be created with null Workout");
         }
         this.workout = workout;
         workout.addWorkoutPlan(this);
@@ -46,7 +48,7 @@ public class WorkoutPlan {
 
     public void setWorkout(Workout workout) {
         if (workout == null) {
-            throw new IllegalArgumentException("Cannot set a null Workout for WorkoutPlan");
+            throw new BusinessException("Cannot set a null Workout for WorkoutPlan");
         }
         this.workout = workout;
         workout.addWorkoutPlan(this);
@@ -54,7 +56,7 @@ public class WorkoutPlan {
 
     public void setWorkoutDate(WorkoutDate workoutDate) {
         if (workoutDate == null) {
-            throw new IllegalArgumentException("Cannot set a null workoutDate for WorkoutPlan");
+            throw new BusinessException("Cannot set a null workoutDate for WorkoutPlan");
         }
         this.workoutDate = workoutDate;
     }

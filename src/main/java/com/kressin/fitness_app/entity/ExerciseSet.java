@@ -1,5 +1,7 @@
 package com.kressin.fitness_app.entity;
 
+import com.kressin.fitness_app.exception.BusinessException;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -23,13 +25,13 @@ public class ExerciseSet {
 
     public ExerciseSet(Integer reps, Double weight, ExercisePlan plan) {
         if (reps == null || reps <= 0) {
-            throw new IllegalArgumentException("ExerciseSet reps cannot be negative or zero");
+            throw new BusinessException("ExerciseSet reps cannot be negative or zero");
         }
         if (weight == null || weight < 0) {
-            throw new IllegalArgumentException("ExerciseSet weight cannot be negative");
+            throw new BusinessException("ExerciseSet weight cannot be negative");
         }
         if (plan == null) {
-            throw new IllegalArgumentException("ExerciseSet plan cannot be null");
+            throw new BusinessException("ExerciseSet plan cannot be null");
         }
         this.reps = reps;
         this.weight = weight;
@@ -54,14 +56,14 @@ public class ExerciseSet {
 
     public void setReps(Integer reps) {
         if (reps <= 0) {
-            throw new IllegalArgumentException("ExerciseSet reps cannot be negative or zero");
+            throw new BusinessException("ExerciseSet reps cannot be negative or zero");
         }
         this.reps = reps;
     }
 
     public void setWeight(Double weight) {
         if (weight <= 0) {
-            throw new IllegalArgumentException("ExerciseSet weight cannot be negative or zero");
+            throw new BusinessException("ExerciseSet weight cannot be negative or zero");
         }
         this.weight = weight;
     }

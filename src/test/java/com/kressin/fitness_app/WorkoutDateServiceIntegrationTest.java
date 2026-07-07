@@ -19,6 +19,7 @@ import com.kressin.fitness_app.dto.WorkoutDateResponse;
 import com.kressin.fitness_app.entity.ScheduleType;
 import com.kressin.fitness_app.entity.Workout;
 import com.kressin.fitness_app.entity.WorkoutPlan;
+import com.kressin.fitness_app.exception.BusinessException;
 import com.kressin.fitness_app.repository.WorkoutPlanRepository;
 import com.kressin.fitness_app.repository.WorkoutRepository;
 import com.kressin.fitness_app.service.WorkoutDateService;
@@ -120,7 +121,7 @@ public class WorkoutDateServiceIntegrationTest {
         createCommand = new CreateWorkoutDateCommand(
                 scheduleType,
                 entries);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessException.class,
                 () -> workoutDateService.addWorkoutDate(createCommand, workoutPlan));
         assertEquals(0, workoutDateService.getAllWorkoutDates().size());
     }

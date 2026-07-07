@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.kressin.fitness_app.dto.WorkoutDateResponse;
 import com.kressin.fitness_app.entity.WorkoutDate;
 import com.kressin.fitness_app.entity.WorkoutPlan;
+import com.kressin.fitness_app.exception.BusinessException;
+import com.kressin.fitness_app.exception.WorkoutDateNotFoundException;
 import com.kressin.fitness_app.mapper.ScheduleEntryMapper;
 import com.kressin.fitness_app.mapper.WorkoutDateMapper;
 import com.kressin.fitness_app.repository.WorkoutDateRepository;
@@ -30,7 +32,7 @@ public class WorkoutDateService {
     @Transactional
     public WorkoutDateResponse addWorkoutDate(CreateWorkoutDateCommand command, WorkoutPlan workoutPlan) {
         if (command.scheduleType() == null) {
-            throw new IllegalArgumentException("Create command must have a valid ScheduleType");
+            throw new BusinessException("Create command must have a valid ScheduleType");
         }
         WorkoutDate workoutDate = new WorkoutDate(workoutPlan, command.scheduleType());
         workoutDate = workoutDateRepo.save(workoutDate);
@@ -48,7 +50,7 @@ public class WorkoutDateService {
     @Transactional
     public WorkoutDateResponse updateWorkoutDate(UpdateWorkoutDateCommand command) {
         if (command.id() == null || !workoutDateRepo.existsById(command.id())) {
-            throw new IllegalArgumentException("WorkoutDate ID must be valid");
+            throw new WorkoutDateNotFoundException(command.id());
         }
 
         WorkoutDate workoutDate = workoutDateRepo.getReferenceById(command.id());
@@ -63,7 +65,7 @@ public class WorkoutDateService {
                     scheduleEntryService.updateScheduleEntry(updateScheduleEntryCommand);
                 } else {
                     if (updateScheduleEntryCommand.weekDay() == null || updateScheduleEntryCommand.dateTime() == null) {
-                        throw new IllegalArgumentException("Create Command must have valid weekDay and dateTime");
+                        throw new BusinessException("Create Command must have valid weekDay and dateTime");
                     }
                     CreateScheduleEntryCommand createCommand = ScheduleEntryMapper
                             .toCreateCommandFromUpdate(updateScheduleEntryCommand);
@@ -78,7 +80,7 @@ public class WorkoutDateService {
     @Transactional
     public WorkoutDateResponse getWorkoutDate(Long id) {
         if (id == null || !workoutDateRepo.existsById(id)) {
-            throw new IllegalArgumentException("WorkoutDate ID must be valid");
+            throw new WorkoutDateNotFoundException(id);
         }
         return WorkoutDateMapper.toResponse(workoutDateRepo.getReferenceById(id));
     }

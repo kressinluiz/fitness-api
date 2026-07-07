@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.kressin.fitness_app.entity.Exercise;
 import com.kressin.fitness_app.entity.ExercisePlan;
 import com.kressin.fitness_app.entity.Workout;
+import com.kressin.fitness_app.exception.BusinessException;
 
 @ExtendWith(MockitoExtension.class)
 public class WorkoutUnitTests {
@@ -37,17 +38,17 @@ public class WorkoutUnitTests {
 
     @Test
     void shouldNotCreateWithBlankName() {
-        assertThrows(IllegalArgumentException.class, () -> new Workout("", description));
+        assertThrows(BusinessException.class, () -> new Workout("", description));
     }
 
     @Test
     void shouldNotCreateWithNullName() {
-        assertThrows(IllegalArgumentException.class, () -> new Workout(null, description));
+        assertThrows(BusinessException.class, () -> new Workout(null, description));
     }
 
     @Test
     void shouldNotCreateWithNullDescription() {
-        assertThrows(IllegalArgumentException.class, () -> new Workout(name, null));
+        assertThrows(BusinessException.class, () -> new Workout(name, null));
     }
 
     @Test
@@ -60,12 +61,12 @@ public class WorkoutUnitTests {
 
     @Test
     void shouldNotUpdateWithBlankName() {
-        assertThrows(IllegalArgumentException.class, () -> workout.setName(""));
+        assertThrows(BusinessException.class, () -> workout.setName(""));
     }
 
     @Test
     void shouldNotUpdateWithNullName() {
-        assertThrows(IllegalArgumentException.class, () -> workout.setName(null));
+        assertThrows(BusinessException.class, () -> workout.setName(null));
     }
 
     @Test
@@ -78,7 +79,7 @@ public class WorkoutUnitTests {
 
     @Test
     void shouldNotUpdateWithNullDescription() {
-        assertThrows(IllegalArgumentException.class, () -> workout.setDescription(null));
+        assertThrows(BusinessException.class, () -> workout.setDescription(null));
     }
 
     @Test
@@ -101,7 +102,7 @@ public class WorkoutUnitTests {
 
     @Test
     void shouldNotAddNullExercisePlan() {
-        assertThrows(IllegalArgumentException.class, () -> workout.addExercisePlan(null));
+        assertThrows(BusinessException.class, () -> workout.addExercisePlan(null));
     }
 
     @Test
@@ -125,7 +126,7 @@ public class WorkoutUnitTests {
 
     @Test
     void shouldThrowDeletingNullExercisePlan() {
-        assertThrows(IllegalArgumentException.class, () -> workout.removeExercisePlan(null));
+        assertThrows(BusinessException.class, () -> workout.removeExercisePlan(null));
     }
 
     @Test
@@ -144,6 +145,6 @@ public class WorkoutUnitTests {
         ExercisePlan secondPlan = new ExercisePlan(exercise, workout);
 
         workout.addExercisePlan(firstPlan);
-        assertThrows(IllegalArgumentException.class, () -> workout.removeExercisePlan(secondPlan));
+        assertThrows(BusinessException.class, () -> workout.removeExercisePlan(secondPlan));
     }
 }

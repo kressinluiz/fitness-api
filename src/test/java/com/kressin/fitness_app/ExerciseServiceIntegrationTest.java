@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kressin.fitness_app.dto.ExerciseResponse;
+import com.kressin.fitness_app.exception.BusinessException;
+import com.kressin.fitness_app.exception.ExerciseNotFoundException;
 import com.kressin.fitness_app.service.ExerciseService;
 import com.kressin.fitness_app.service.command.CreateExerciseCommand;
 import com.kressin.fitness_app.service.command.UpdateExerciseCommand;
@@ -62,7 +64,7 @@ public class ExerciseServiceIntegrationTest {
                 description,
                 category,
                 muscleGroup);
-        assertThrows(IllegalArgumentException.class, () -> exerciseService.addExercise(invalidCommand));
+        assertThrows(BusinessException.class, () -> exerciseService.addExercise(invalidCommand));
         assertEquals(0, exerciseService.getAllExercises().size());
     }
 
@@ -73,7 +75,7 @@ public class ExerciseServiceIntegrationTest {
                 description,
                 category,
                 muscleGroup);
-        assertThrows(IllegalArgumentException.class, () -> exerciseService.addExercise(invalidCommand));
+        assertThrows(BusinessException.class, () -> exerciseService.addExercise(invalidCommand));
         assertEquals(0, exerciseService.getAllExercises().size());
     }
 
@@ -84,7 +86,7 @@ public class ExerciseServiceIntegrationTest {
                 null,
                 category,
                 muscleGroup);
-        assertThrows(IllegalArgumentException.class, () -> exerciseService.addExercise(invalidCommand));
+        assertThrows(BusinessException.class, () -> exerciseService.addExercise(invalidCommand));
         assertEquals(0, exerciseService.getAllExercises().size());
     }
 
@@ -95,7 +97,7 @@ public class ExerciseServiceIntegrationTest {
                 description,
                 null,
                 muscleGroup);
-        assertThrows(IllegalArgumentException.class, () -> exerciseService.addExercise(invalidCommand));
+        assertThrows(BusinessException.class, () -> exerciseService.addExercise(invalidCommand));
         assertEquals(0, exerciseService.getAllExercises().size());
     }
 
@@ -106,7 +108,7 @@ public class ExerciseServiceIntegrationTest {
                 description,
                 category,
                 null);
-        assertThrows(IllegalArgumentException.class, () -> exerciseService.addExercise(invalidCommand));
+        assertThrows(BusinessException.class, () -> exerciseService.addExercise(invalidCommand));
         assertEquals(0, exerciseService.getAllExercises().size());
     }
 
@@ -298,7 +300,7 @@ public class ExerciseServiceIntegrationTest {
                 newCategory,
                 newMuscleGroup);
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ExerciseNotFoundException.class,
                 () -> exerciseService.updateExercise(updateCommand));
     }
 
@@ -314,7 +316,7 @@ public class ExerciseServiceIntegrationTest {
 
         exerciseService.deleteExercise(createResponse.id());
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ExerciseNotFoundException.class,
                 () -> exerciseService.getExercise(createResponse.id()));
         assertEquals(0, exerciseService.getAllExercises().size());
     }
@@ -343,7 +345,7 @@ public class ExerciseServiceIntegrationTest {
     @Test
     void shouldThrowWhenGetNonExistingExercise() {
         Long randomID = 1L;
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ExerciseNotFoundException.class,
                 () -> exerciseService.getExercise(randomID));
     }
 

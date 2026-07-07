@@ -17,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.kressin.fitness_app.dto.WorkoutPlanResponse;
 import com.kressin.fitness_app.entity.ScheduleType;
 import com.kressin.fitness_app.entity.Workout;
+import com.kressin.fitness_app.exception.BusinessException;
+import com.kressin.fitness_app.exception.WorkoutPlanNotFoundException;
 import com.kressin.fitness_app.repository.WorkoutDateRepository;
 import com.kressin.fitness_app.repository.WorkoutPlanRepository;
 import com.kressin.fitness_app.repository.WorkoutRepository;
@@ -101,7 +103,7 @@ public class WorkoutPlanServiceIntegrationTest {
         createCommand = new CreateWorkoutPlanCommand(
                 randomID,
                 createWorkoutDateCommand);
-        assertThrows(IllegalArgumentException.class, () -> workoutPlanService.addWorkoutPlan(createCommand));
+        assertThrows(BusinessException.class, () -> workoutPlanService.addWorkoutPlan(createCommand));
         assertEquals(0, workoutPlanRepo.count());
         assertEquals(0, workoutDateRepo.count());
     }
@@ -114,7 +116,7 @@ public class WorkoutPlanServiceIntegrationTest {
         createCommand = new CreateWorkoutPlanCommand(
                 workout.getId(),
                 createWorkoutDateCommand);
-        assertThrows(IllegalArgumentException.class, () -> workoutPlanService.addWorkoutPlan(createCommand));
+        assertThrows(BusinessException.class, () -> workoutPlanService.addWorkoutPlan(createCommand));
         assertEquals(0, workoutPlanRepo.count());
         assertEquals(0, workoutDateRepo.count());
     }
@@ -163,13 +165,13 @@ public class WorkoutPlanServiceIntegrationTest {
 
     @Test
     void shouldNotDeleteNullID() {
-        assertThrows(IllegalArgumentException.class, () -> workoutPlanService.deleteWorkoutPlan(null));
+        assertThrows(WorkoutPlanNotFoundException.class, () -> workoutPlanService.deleteWorkoutPlan(null));
     }
 
     @Test
     void shouldNotDeleteInvalidID() {
         Long randomID = 333L;
-        assertThrows(IllegalArgumentException.class, () -> workoutPlanService.deleteWorkoutPlan(randomID));
+        assertThrows(WorkoutPlanNotFoundException.class, () -> workoutPlanService.deleteWorkoutPlan(randomID));
     }
 
 }

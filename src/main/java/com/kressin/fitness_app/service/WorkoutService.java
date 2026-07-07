@@ -9,6 +9,7 @@ import com.kressin.fitness_app.dto.WorkoutResponse;
 import com.kressin.fitness_app.entity.ExercisePlan;
 import com.kressin.fitness_app.entity.Workout;
 import com.kressin.fitness_app.entity.WorkoutPlan;
+import com.kressin.fitness_app.exception.WorkoutNotFoundException;
 import com.kressin.fitness_app.mapper.ExercisePlanMapper;
 import com.kressin.fitness_app.mapper.WorkoutMapper;
 import com.kressin.fitness_app.repository.WorkoutRepository;
@@ -48,7 +49,7 @@ public class WorkoutService {
     @Transactional
     public WorkoutResponse updateWorkout(UpdateWorkoutCommand command) {
         if (command.id() == null || !workoutRepo.existsById(command.id())) {
-            throw new IllegalArgumentException("Workout ID must be valid");
+            throw new WorkoutNotFoundException(command.id());
         }
         Workout workout = workoutRepo.getReferenceById(command.id());
 
@@ -82,7 +83,7 @@ public class WorkoutService {
 
     public WorkoutResponse getWorkout(Long id) {
         if (id == null || !workoutRepo.existsById(id)) {
-            throw new IllegalArgumentException("Workout ID must be valid");
+            throw new WorkoutNotFoundException(id);
         }
         return WorkoutMapper.toResponse(workoutRepo.getReferenceById(id));
     }
@@ -90,7 +91,7 @@ public class WorkoutService {
     @Transactional
     public void deleteWorkout(Long id) {
         if (id == null || !workoutRepo.existsById(id)) {
-            throw new IllegalArgumentException("Workout ID must be valid");
+            throw new WorkoutNotFoundException(id);
         }
 
         Workout workout = workoutRepo.getReferenceById(id);

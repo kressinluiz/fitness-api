@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.kressin.fitness_app.exception.BusinessException;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,10 +31,10 @@ public class Workout {
 
     public Workout(String name, String description) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Workout name cannot be empty");
+            throw new BusinessException("Workout name cannot be empty");
         }
         if (description == null) {
-            throw new IllegalArgumentException("Workout description cannot be null");
+            throw new BusinessException("Workout description cannot be null");
         }
         this.name = name;
         this.description = description;
@@ -56,7 +58,7 @@ public class Workout {
 
     public void addExercisePlan(ExercisePlan plan) {
         if (plan == null) {
-            throw new IllegalArgumentException("Not possible to add null ExercisePlan to Workout");
+            throw new BusinessException("Not possible to add null ExercisePlan to Workout");
         }
 
         this.exercisePlans.add(plan);
@@ -64,10 +66,10 @@ public class Workout {
 
     public void removeExercisePlan(ExercisePlan plan) {
         if (plan == null) {
-            throw new IllegalArgumentException("Not possible to remove null ExercisePlan from Workout");
+            throw new BusinessException("Not possible to remove null ExercisePlan from Workout");
         }
         if (!this.exercisePlans.remove(plan)) {
-            throw new IllegalArgumentException(
+            throw new BusinessException(
                     "Why are we trying to delete an exercise plan not present in the workout?");
         }
     }
@@ -78,31 +80,31 @@ public class Workout {
 
     public void addWorkoutPlan(WorkoutPlan plan) {
         if (plan == null) {
-            throw new IllegalArgumentException("Not possible to add null WorkoutPlan to Workout");
+            throw new BusinessException("Not possible to add null WorkoutPlan to Workout");
         }
         workoutPlans.add(plan);
     }
 
     public void removeWorkoutPlan(WorkoutPlan plan) {
         if (plan == null) {
-            throw new IllegalArgumentException("Not possible to remove null WorkoutPlan from Workout");
+            throw new BusinessException("Not possible to remove null WorkoutPlan from Workout");
         }
         if (!workoutPlans.remove(plan)) {
-            throw new IllegalArgumentException(
+            throw new BusinessException(
                     "Why are we trying to delete an WorkoutPlan not present in the Workout?");
         }
     }
 
     public void setName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Workout name cannot be empty");
+            throw new BusinessException("Workout name cannot be empty");
         }
         this.name = name;
     }
 
     public void setDescription(String description) {
         if (description == null) {
-            throw new IllegalArgumentException("Workout description cannot be null");
+            throw new BusinessException("Workout description cannot be null");
         }
         this.description = description;
     }

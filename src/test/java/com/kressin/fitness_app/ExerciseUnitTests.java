@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.kressin.fitness_app.entity.Exercise;
+import com.kressin.fitness_app.exception.BusinessException;
 
 @ExtendWith(MockitoExtension.class)
 public class ExerciseUnitTests {
@@ -30,7 +31,7 @@ public class ExerciseUnitTests {
 
     @Test
     void shouldNotCreateWithBlankName() {
-        assertThrows(IllegalArgumentException.class, () -> new Exercise(
+        assertThrows(BusinessException.class, () -> new Exercise(
                 "",
                 "Descrição do Exercício de Teste",
                 "Categoria do Exercício de Teste",
@@ -39,7 +40,7 @@ public class ExerciseUnitTests {
 
     @Test
     void shouldNotCreateWithNullName() {
-        assertThrows(IllegalArgumentException.class, () -> new Exercise(
+        assertThrows(BusinessException.class, () -> new Exercise(
                 null,
                 "Descrição do Exercício de Teste",
                 "Categoria do Exercício de Teste",
@@ -48,7 +49,7 @@ public class ExerciseUnitTests {
 
     @Test
     void shouldNotCreateWithNullDescription() {
-        assertThrows(IllegalArgumentException.class, () -> new Exercise(
+        assertThrows(BusinessException.class, () -> new Exercise(
                 "Exercício de Teste",
                 null,
                 "Categoria do Exercício de Teste",
@@ -57,7 +58,7 @@ public class ExerciseUnitTests {
 
     @Test
     void shouldNotCreateWithNullCategory() {
-        assertThrows(IllegalArgumentException.class, () -> new Exercise(
+        assertThrows(BusinessException.class, () -> new Exercise(
                 "Exercício de Teste",
                 "Descrição do Exercício de Teste",
                 null,
@@ -66,7 +67,7 @@ public class ExerciseUnitTests {
 
     @Test
     void shouldNotCreateWithNullMuscleGroup() {
-        assertThrows(IllegalArgumentException.class, () -> new Exercise(
+        assertThrows(BusinessException.class, () -> new Exercise(
                 "Exercício de Teste",
                 "Descrição do Exercício de Teste",
                 "Categoria do Exercício de Teste",
@@ -93,7 +94,7 @@ public class ExerciseUnitTests {
                 "Categoria do Exercício de Teste",
                 "Grupo do Exercício de Teste");
 
-        assertThrows(IllegalArgumentException.class, () -> exercise.setName(null));
+        assertThrows(BusinessException.class, () -> exercise.setName(null));
     }
 
     @Test
@@ -104,7 +105,7 @@ public class ExerciseUnitTests {
                 "Categoria do Exercício de Teste",
                 "Grupo do Exercício de Teste");
 
-        assertThrows(IllegalArgumentException.class, () -> exercise.setName(""));
+        assertThrows(BusinessException.class, () -> exercise.setName(""));
     }
 
     @Test
@@ -127,7 +128,7 @@ public class ExerciseUnitTests {
                 "Categoria do Exercício de Teste",
                 "Grupo do Exercício de Teste");
 
-        assertThrows(IllegalArgumentException.class, () -> exercise.setDescription(null));
+        assertThrows(BusinessException.class, () -> exercise.setDescription(null));
     }
 
     @Test
@@ -150,7 +151,7 @@ public class ExerciseUnitTests {
                 "Categoria do Exercício de Teste",
                 "Grupo do Exercício de Teste");
 
-        assertThrows(IllegalArgumentException.class, () -> exercise.setCategory(null));
+        assertThrows(BusinessException.class, () -> exercise.setCategory(null));
     }
 
     @Test
@@ -173,7 +174,7 @@ public class ExerciseUnitTests {
                 "Categoria do Exercício de Teste",
                 "Grupo do Exercício de Teste");
 
-        assertThrows(IllegalArgumentException.class, () -> exercise.setMuscleGroup(null));
+        assertThrows(BusinessException.class, () -> exercise.setMuscleGroup(null));
     }
 
     @Test

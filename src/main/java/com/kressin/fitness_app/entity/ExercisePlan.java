@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.kressin.fitness_app.exception.BusinessException;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,10 +36,10 @@ public class ExercisePlan {
 
     public ExercisePlan(Exercise exercise, Workout workout) {
         if (exercise == null) {
-            throw new IllegalArgumentException("ExercisePlan must have a valid Exercise");
+            throw new BusinessException("ExercisePlan must have a valid Exercise");
         }
         if (workout == null) {
-            throw new IllegalArgumentException("ExercisePlan must have a valid Workout");
+            throw new BusinessException("ExercisePlan must have a valid Workout");
         }
         this.exercise = exercise;
         this.workout = workout;
@@ -61,28 +63,28 @@ public class ExercisePlan {
 
     public void addExerciseSet(ExerciseSet set) {
         if (set == null) {
-            throw new IllegalArgumentException("ExerciseSet cannot be null");
+            throw new BusinessException("ExerciseSet cannot be null");
         }
         this.sets.add(set);
     }
 
     public void removeExerciseSet(ExerciseSet set) {
         if (set == null) {
-            throw new IllegalArgumentException("ExerciseSet cannot be null");
+            throw new BusinessException("ExerciseSet cannot be null");
         }
         this.sets.remove(set);
     }
 
     public void setExercise(Exercise exercise) {
         if (exercise == null) {
-            throw new IllegalArgumentException("ExercisePlan must have a valid Exercise");
+            throw new BusinessException("ExercisePlan must have a valid Exercise");
         }
         this.exercise = exercise;
     }
 
     public void setWorkout(Workout workout) {
         if (workout == null) {
-            throw new IllegalArgumentException("ExercisePlan must have a valid Workout");
+            throw new BusinessException("ExercisePlan must have a valid Workout");
         }
         this.workout = workout;
     }

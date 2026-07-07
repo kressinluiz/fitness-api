@@ -16,6 +16,7 @@ import com.kressin.fitness_app.entity.ScheduleType;
 import com.kressin.fitness_app.entity.Workout;
 import com.kressin.fitness_app.entity.WorkoutDate;
 import com.kressin.fitness_app.entity.WorkoutPlan;
+import com.kressin.fitness_app.exception.BusinessException;
 
 @ExtendWith(MockitoExtension.class)
 public class ScheduleEntryUnitTests {
@@ -51,17 +52,17 @@ public class ScheduleEntryUnitTests {
 
     @Test
     void shouldNotCreateWithInvalidWeekDay() {
-        assertThrows(IllegalArgumentException.class, () -> new ScheduleEntry(10, dateTime, workoutDate));
+        assertThrows(BusinessException.class, () -> new ScheduleEntry(10, dateTime, workoutDate));
     }
 
     @Test
     void shouldNotCreateWithNullDateTime() {
-        assertThrows(IllegalArgumentException.class, () -> new ScheduleEntry(1, null, workoutDate));
+        assertThrows(BusinessException.class, () -> new ScheduleEntry(1, null, workoutDate));
     }
 
     @Test
     void shouldNotCreateWithNullWorkoutDate() {
-        assertThrows(IllegalArgumentException.class, () -> new ScheduleEntry(1, dateTime, null));
+        assertThrows(BusinessException.class, () -> new ScheduleEntry(1, dateTime, null));
     }
 
     @Test
@@ -72,7 +73,7 @@ public class ScheduleEntryUnitTests {
 
     @Test
     void shouldNotSetWithInvalidWeekDay() {
-        assertThrows(IllegalArgumentException.class, () -> scheduleEntry.setWeekDay(10));
+        assertThrows(BusinessException.class, () -> scheduleEntry.setWeekDay(10));
     }
 
     @Test
@@ -84,6 +85,6 @@ public class ScheduleEntryUnitTests {
 
     @Test
     void shouldNotSetWithNullDateTime() {
-        assertThrows(IllegalArgumentException.class, () -> scheduleEntry.setDateTime(null));
+        assertThrows(BusinessException.class, () -> scheduleEntry.setDateTime(null));
     }
 }

@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.kressin.fitness_app.entity.Exercise;
 import com.kressin.fitness_app.entity.ExercisePlan;
 import com.kressin.fitness_app.entity.Workout;
+import com.kressin.fitness_app.exception.BusinessException;
 
 @ExtendWith(MockitoExtension.class)
 public class ExercisePlanUnitTests {
@@ -42,7 +43,7 @@ public class ExercisePlanUnitTests {
                 "Workout de Teste",
                 "Descrição do Workout de Teste");
 
-        assertThrows(IllegalArgumentException.class, () -> new ExercisePlan(exercise, workout));
+        assertThrows(BusinessException.class, () -> new ExercisePlan(exercise, workout));
     }
 
     @Test
@@ -55,7 +56,7 @@ public class ExercisePlanUnitTests {
 
         Workout workout = null;
 
-        assertThrows(IllegalArgumentException.class, () -> new ExercisePlan(exercise, workout));
+        assertThrows(BusinessException.class, () -> new ExercisePlan(exercise, workout));
     }
 
     @Test
@@ -96,7 +97,7 @@ public class ExercisePlanUnitTests {
 
         ExercisePlan plan = new ExercisePlan(exercise, workout);
         Exercise anotherExercise = null;
-        assertThrows(IllegalArgumentException.class, () -> plan.setExercise(anotherExercise));
+        assertThrows(BusinessException.class, () -> plan.setExercise(anotherExercise));
     }
 
     @Test
@@ -135,7 +136,7 @@ public class ExercisePlanUnitTests {
 
         ExercisePlan plan = new ExercisePlan(exercise, workout);
         Workout anotherWorkout = null;
-        assertThrows(IllegalArgumentException.class, () -> plan.setWorkout(anotherWorkout));
+        assertThrows(BusinessException.class, () -> plan.setWorkout(anotherWorkout));
     }
 
     @Test

@@ -16,6 +16,7 @@ import com.kressin.fitness_app.entity.ScheduleType;
 import com.kressin.fitness_app.entity.Workout;
 import com.kressin.fitness_app.entity.WorkoutDate;
 import com.kressin.fitness_app.entity.WorkoutPlan;
+import com.kressin.fitness_app.exception.BusinessException;
 
 @ExtendWith(MockitoExtension.class)
 public class WorkoutDateUnitTests {
@@ -44,14 +45,14 @@ public class WorkoutDateUnitTests {
 
     @Test
     void shouldNotCreateWithInvalidWorkoutPlan() {
-        assertThrows(IllegalArgumentException.class, () -> new WorkoutDate(
+        assertThrows(BusinessException.class, () -> new WorkoutDate(
                 null,
                 ScheduleType.RECURRING));
     }
 
     @Test
     void shouldNotCreateWithInvalidScheduleType() {
-        assertThrows(IllegalArgumentException.class, () -> new WorkoutDate(
+        assertThrows(BusinessException.class, () -> new WorkoutDate(
                 workoutPlan,
                 null));
     }
@@ -71,7 +72,7 @@ public class WorkoutDateUnitTests {
 
     @Test
     void shouldNotAddNullScheduleEntry() {
-        assertThrows(IllegalArgumentException.class, () -> workoutDate.addScheduleEntry(null));
+        assertThrows(BusinessException.class, () -> workoutDate.addScheduleEntry(null));
     }
 
     @Test
@@ -88,7 +89,7 @@ public class WorkoutDateUnitTests {
 
     @Test
     void shouldNotRemoveNullScheduleEntry() {
-        assertThrows(IllegalArgumentException.class, () -> workoutDate.removeScheduleEntry(null));
+        assertThrows(BusinessException.class, () -> workoutDate.removeScheduleEntry(null));
     }
 
     @Test
@@ -102,7 +103,7 @@ public class WorkoutDateUnitTests {
                 1,
                 dateTime,
                 newWorkoutDate);
-        assertThrows(IllegalArgumentException.class, () -> workoutDate.removeScheduleEntry(entry));
+        assertThrows(BusinessException.class, () -> workoutDate.removeScheduleEntry(entry));
     }
 
     @Test
@@ -113,6 +114,6 @@ public class WorkoutDateUnitTests {
 
     @Test
     void shouldNotSetWithNullScheduleType() {
-        assertThrows(IllegalArgumentException.class, () -> workoutDate.setScheduleType(null));
+        assertThrows(BusinessException.class, () -> workoutDate.setScheduleType(null));
     }
 }

@@ -13,6 +13,7 @@ import com.kressin.fitness_app.entity.Exercise;
 import com.kressin.fitness_app.entity.ExercisePlan;
 import com.kressin.fitness_app.entity.ExerciseSet;
 import com.kressin.fitness_app.entity.Workout;
+import com.kressin.fitness_app.exception.BusinessException;
 
 @ExtendWith(MockitoExtension.class)
 public class ExerciseSetUnitTests {
@@ -50,7 +51,7 @@ public class ExerciseSetUnitTests {
     @Test
     void shouldNotCreateWithInvalidReps() {
         reps = 0;
-        assertThrows(IllegalArgumentException.class, () -> new ExerciseSet(
+        assertThrows(BusinessException.class, () -> new ExerciseSet(
                 reps,
                 weight,
                 plan));
@@ -59,7 +60,7 @@ public class ExerciseSetUnitTests {
     @Test
     void shouldNotCreateWithInvalidWeight() {
         weight = -0.1;
-        assertThrows(IllegalArgumentException.class, () -> new ExerciseSet(
+        assertThrows(BusinessException.class, () -> new ExerciseSet(
                 reps,
                 weight,
                 plan));
@@ -68,7 +69,7 @@ public class ExerciseSetUnitTests {
     @Test
     void shouldNotCreateWithInvalidExercisePlan() {
         plan = null;
-        assertThrows(IllegalArgumentException.class, () -> new ExerciseSet(
+        assertThrows(BusinessException.class, () -> new ExerciseSet(
                 reps,
                 weight,
                 plan));
@@ -84,7 +85,7 @@ public class ExerciseSetUnitTests {
     @Test
     void shouldNotUpdateWithInvalidReps() {
         reps = -1;
-        assertThrows(IllegalArgumentException.class, () -> set.setReps(reps));
+        assertThrows(BusinessException.class, () -> set.setReps(reps));
     }
 
     @Test
@@ -97,6 +98,6 @@ public class ExerciseSetUnitTests {
     @Test
     void shouldNotUpdateWithInvalidWeight() {
         weight = -1.0;
-        assertThrows(IllegalArgumentException.class, () -> set.setWeight(weight));
+        assertThrows(BusinessException.class, () -> set.setWeight(weight));
     }
 }

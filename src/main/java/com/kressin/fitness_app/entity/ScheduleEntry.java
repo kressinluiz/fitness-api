@@ -2,6 +2,8 @@ package com.kressin.fitness_app.entity;
 
 import java.time.ZonedDateTime;
 
+import com.kressin.fitness_app.exception.BusinessException;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -26,13 +28,13 @@ public class ScheduleEntry {
 
     public ScheduleEntry(Integer weekDay, ZonedDateTime dateTime, WorkoutDate workoutDate) {
         if (weekDay == null || weekDay < 0 || weekDay > 7) {
-            throw new IllegalArgumentException(String.format("Invalid WeekDay for ScheduleEntry: %d", weekDay));
+            throw new BusinessException(String.format("Invalid WeekDay for ScheduleEntry: %d", weekDay));
         }
         if (dateTime == null) {
-            throw new IllegalArgumentException("Null DateTime for ScheduleEntry");
+            throw new BusinessException("Null DateTime for ScheduleEntry");
         }
         if (workoutDate == null) {
-            throw new IllegalArgumentException("Null WorkoutDate for ScheduleEntry");
+            throw new BusinessException("Null WorkoutDate for ScheduleEntry");
         }
 
         this.weekDay = weekDay;
@@ -58,14 +60,14 @@ public class ScheduleEntry {
 
     public void setWeekDay(Integer weekDay) {
         if (weekDay < 0 || weekDay > 7 || weekDay == null) {
-            throw new IllegalArgumentException(String.format("Invalid WeekDay for ScheduleEntry: %d", weekDay));
+            throw new BusinessException(String.format("Invalid WeekDay for ScheduleEntry: %d", weekDay));
         }
         this.weekDay = weekDay;
     }
 
     public void setDateTime(ZonedDateTime dateTime) {
         if (dateTime == null) {
-            throw new IllegalArgumentException("Null DateTime for ScheduleEntry");
+            throw new BusinessException("Null DateTime for ScheduleEntry");
         }
         this.dateTime = dateTime;
     }

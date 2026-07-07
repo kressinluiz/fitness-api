@@ -16,6 +16,8 @@ import com.kressin.fitness_app.entity.ScheduleType;
 import com.kressin.fitness_app.entity.Workout;
 import com.kressin.fitness_app.entity.WorkoutDate;
 import com.kressin.fitness_app.entity.WorkoutPlan;
+import com.kressin.fitness_app.exception.BusinessException;
+import com.kressin.fitness_app.exception.ScheduleEntryNotFoundException;
 import com.kressin.fitness_app.repository.WorkoutDateRepository;
 import com.kressin.fitness_app.repository.WorkoutPlanRepository;
 import com.kressin.fitness_app.repository.WorkoutRepository;
@@ -143,7 +145,8 @@ public class ScheduleEntryServiceIntegrationTest {
                 null,
                 newWeekDay,
                 newDateTime);
-        assertThrows(IllegalArgumentException.class, () -> scheduleEntryService.updateScheduleEntry(updateCommand));
+        assertThrows(ScheduleEntryNotFoundException.class,
+                () -> scheduleEntryService.updateScheduleEntry(updateCommand));
     }
 
     @Test
@@ -156,7 +159,8 @@ public class ScheduleEntryServiceIntegrationTest {
                 null,
                 newWeekDay,
                 newDateTime);
-        assertThrows(IllegalArgumentException.class, () -> scheduleEntryService.updateScheduleEntry(updateCommand));
+        assertThrows(ScheduleEntryNotFoundException.class,
+                () -> scheduleEntryService.updateScheduleEntry(updateCommand));
     }
 
     @Test
@@ -168,25 +172,25 @@ public class ScheduleEntryServiceIntegrationTest {
 
     @Test
     void shouldNotDeleteNullID() {
-        assertThrows(IllegalArgumentException.class, () -> scheduleEntryService.deleteScheduleEntry(null));
+        assertThrows(ScheduleEntryNotFoundException.class, () -> scheduleEntryService.deleteScheduleEntry(null));
     }
 
     @Test
     void shouldNotDeleteInvalidID() {
         Long randomID = 333L;
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ScheduleEntryNotFoundException.class,
                 () -> scheduleEntryService.deleteScheduleEntry(randomID));
     }
 
     @Test
     void shouldNotGetNullID() {
-        assertThrows(IllegalArgumentException.class, () -> scheduleEntryService.getScheduleEntry(null));
+        assertThrows(ScheduleEntryNotFoundException.class, () -> scheduleEntryService.getScheduleEntry(null));
     }
 
     @Test
     void shouldNotGetInvalidID() {
         Long randomID = 333L;
-        assertThrows(IllegalArgumentException.class, () -> scheduleEntryService.getScheduleEntry(randomID));
+        assertThrows(ScheduleEntryNotFoundException.class, () -> scheduleEntryService.getScheduleEntry(randomID));
     }
 
     @Test

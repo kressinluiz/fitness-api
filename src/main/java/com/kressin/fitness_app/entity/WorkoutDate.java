@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.kressin.fitness_app.exception.BusinessException;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -35,10 +37,10 @@ public class WorkoutDate {
 
     public WorkoutDate(WorkoutPlan workoutPlan, ScheduleType scheduleType) {
         if (workoutPlan == null) {
-            throw new IllegalArgumentException("Cannot create WorkoutDate with null WorkoutPlan");
+            throw new BusinessException("Cannot create WorkoutDate with null WorkoutPlan");
         }
         if (scheduleType == null) {
-            throw new IllegalArgumentException("Cannot create WorkoutDate with null ScheduleType");
+            throw new BusinessException("Cannot create WorkoutDate with null ScheduleType");
         }
         this.scheduleType = scheduleType;
         this.workoutPlan = workoutPlan;
@@ -62,23 +64,23 @@ public class WorkoutDate {
 
     public void addScheduleEntry(ScheduleEntry entry) {
         if (entry == null) {
-            throw new IllegalArgumentException("Cannot add null ScheduleEntry to WorkoutDate");
+            throw new BusinessException("Cannot add null ScheduleEntry to WorkoutDate");
         }
         scheduleEntries.add(entry);
     }
 
     public void removeScheduleEntry(ScheduleEntry entry) {
         if (entry == null) {
-            throw new IllegalArgumentException("Cannot remove null ScheduleEntry from WorkoutDate");
+            throw new BusinessException("Cannot remove null ScheduleEntry from WorkoutDate");
         }
         if (!scheduleEntries.remove(entry)) {
-            throw new IllegalArgumentException("Why are we trying to remove a ScheduleEntry not present in the list?");
+            throw new BusinessException("Why are we trying to remove a ScheduleEntry not present in the list?");
         }
     }
 
     public void setScheduleType(ScheduleType scheduleType) {
         if (scheduleType == null) {
-            throw new IllegalArgumentException("Cannot create WorkoutDate with null ScheduleType");
+            throw new BusinessException("Cannot create WorkoutDate with null ScheduleType");
         }
         this.scheduleType = scheduleType;
     }
