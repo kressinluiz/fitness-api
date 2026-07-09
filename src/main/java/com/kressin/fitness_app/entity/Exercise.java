@@ -7,6 +7,7 @@ import java.util.List;
 import com.kressin.fitness_app.exception.BusinessException;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -17,9 +18,13 @@ public class Exercise {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(nullable = false, length = 100)
     private String name;
+    @Column(nullable = false, length = 500)
     private String description;
+    @Column(nullable = false, length = 100)
     private String category;
+    @Column(nullable = false, length = 100)
     private String muscleGroup;
 
     @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -3,6 +3,7 @@ package com.kressin.fitness_app.entity;
 import com.kressin.fitness_app.exception.BusinessException;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -16,8 +17,8 @@ public class WorkoutPlan {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "workout_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "workout_id", nullable = false)
     private Workout workout;
 
     @OneToOne(mappedBy = "workoutPlan", cascade = CascadeType.ALL, orphanRemoval = true)

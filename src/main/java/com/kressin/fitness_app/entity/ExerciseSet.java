@@ -2,6 +2,7 @@ package com.kressin.fitness_app.entity;
 
 import com.kressin.fitness_app.exception.BusinessException;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -13,11 +14,13 @@ public class ExerciseSet {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(nullable = false)
     private Integer reps;
+    @Column(nullable = false)
     private Double weight;
 
-    @ManyToOne
-    @JoinColumn(name = "exerciseplan_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "exerciseplan_id", nullable = false)
     private ExercisePlan exercisePlan;
 
     protected ExerciseSet() {

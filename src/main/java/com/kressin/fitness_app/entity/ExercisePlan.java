@@ -20,15 +20,15 @@ public class ExercisePlan {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "exercise_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "exercise_id", nullable = false)
     private Exercise exercise;
 
     @OneToMany(mappedBy = "exercisePlan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExerciseSet> sets = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "workout_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "workout_id", nullable = false)
     private Workout workout;
 
     protected ExercisePlan() {

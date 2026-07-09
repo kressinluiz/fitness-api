@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 
 import com.kressin.fitness_app.exception.BusinessException;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -16,11 +17,13 @@ public class ScheduleEntry {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "workoutdate_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "workoutdate_id", nullable = false)
     private WorkoutDate workoutDate;
 
+    @Column(nullable = false)
     private Integer weekDay;
+    @Column(nullable = false)
     private ZonedDateTime dateTime;
 
     protected ScheduleEntry() {

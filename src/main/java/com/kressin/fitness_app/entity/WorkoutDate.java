@@ -7,6 +7,7 @@ import java.util.List;
 import com.kressin.fitness_app.exception.BusinessException;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,6 +28,7 @@ public class WorkoutDate {
     private WorkoutPlan workoutPlan;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ScheduleType scheduleType;
 
     @OneToMany(mappedBy = "workoutDate", cascade = CascadeType.ALL, orphanRemoval = true)
