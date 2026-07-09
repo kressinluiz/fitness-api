@@ -14,6 +14,8 @@ import com.kressin.fitness_app.repository.ScheduleEntryRepository;
 import com.kressin.fitness_app.service.command.CreateScheduleEntryCommand;
 import com.kressin.fitness_app.service.command.UpdateScheduleEntryCommand;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ScheduleEntryService {
     private final ScheduleEntryRepository scheduleEntryRepo;
@@ -22,6 +24,7 @@ public class ScheduleEntryService {
         this.scheduleEntryRepo = scheduleEntryRepo;
     }
 
+    @Transactional
     public ScheduleEntryResponse addScheduleEntry(CreateScheduleEntryCommand command, WorkoutDate workoutDate) {
         if (command.weekDay() == null || command.dateTime() == null) {
             throw new BusinessException("Create Command must have valid weekDay and dateTime");
@@ -35,16 +38,15 @@ public class ScheduleEntryService {
         return ScheduleEntryMapper.toResponse(scheduleEntry);
     }
 
+    @Transactional
     public ScheduleEntryResponse updateScheduleEntry(UpdateScheduleEntryCommand command) {
-        if (command.id() == null || !scheduleEntryRepo.existsById(command.id())) {
-            throw new ScheduleEntryNotFoundException(command.id());
-        }
-
         if (command.shouldDelete() != null && command.shouldDelete()) {
             deleteScheduleEntry(command.id());
+            return null;
         }
 
-        ScheduleEntry scheduleEntry = scheduleEntryRepo.getReferenceById(command.id());
+        ScheduleEntry scheduleEntry = scheduleEntryRepo.findById(command.id())
+                .orElseThrow(() -> new ScheduleEntryNotFoundException(command.id()));
 
         if (command.weekDay() != null) {
             scheduleEntry.setWeekDay(command.weekDay());
@@ -57,20 +59,16 @@ public class ScheduleEntryService {
         return ScheduleEntryMapper.toResponse(scheduleEntry);
     }
 
+    @Transactional
     public void deleteScheduleEntry(Long id) {
-        if (id == null || !scheduleEntryRepo.existsById(id)) {
-            throw new ScheduleEntryNotFoundException(id);
-        }
-        ScheduleEntry entry = scheduleEntryRepo.getReferenceById(id);
+        ScheduleEntry entry = scheduleEntryRepo.findById(id).orElseThrow(() -> new ScheduleEntryNotFoundException(id));
         entry.getWorkoutDate().removeScheduleEntry(entry);
         scheduleEntryRepo.deleteById(id);
     }
 
     public ScheduleEntryResponse getScheduleEntry(Long id) {
-        if (id == null || !scheduleEntryRepo.existsById(id)) {
-            throw new ScheduleEntryNotFoundException(id);
-        }
-        return ScheduleEntryMapper.toResponse(scheduleEntryRepo.getReferenceById(id));
+        return ScheduleEntryMapper
+                .toResponse(scheduleEntryRepo.findById(id).orElseThrow(() -> new ScheduleEntryNotFoundException(id)));
     }
 
     public List<ScheduleEntryResponse> getAllScheduleEntries() {

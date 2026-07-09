@@ -16,7 +16,6 @@ import com.kressin.fitness_app.entity.ScheduleType;
 import com.kressin.fitness_app.entity.Workout;
 import com.kressin.fitness_app.entity.WorkoutDate;
 import com.kressin.fitness_app.entity.WorkoutPlan;
-import com.kressin.fitness_app.exception.BusinessException;
 import com.kressin.fitness_app.exception.ScheduleEntryNotFoundException;
 import com.kressin.fitness_app.repository.WorkoutDateRepository;
 import com.kressin.fitness_app.repository.WorkoutPlanRepository;
@@ -137,19 +136,6 @@ public class ScheduleEntryServiceIntegrationTest {
     }
 
     @Test
-    void shouldNotUpdateWithNullID() {
-        Integer newWeekDay = 1;
-        ZonedDateTime newDateTime = ZonedDateTime.now();
-        UpdateScheduleEntryCommand updateCommand = new UpdateScheduleEntryCommand(
-                null,
-                null,
-                newWeekDay,
-                newDateTime);
-        assertThrows(ScheduleEntryNotFoundException.class,
-                () -> scheduleEntryService.updateScheduleEntry(updateCommand));
-    }
-
-    @Test
     void shouldNotUpdateWithInvalidID() {
         Integer newWeekDay = 1;
         Long randomID = 333L;
@@ -171,20 +157,10 @@ public class ScheduleEntryServiceIntegrationTest {
     }
 
     @Test
-    void shouldNotDeleteNullID() {
-        assertThrows(ScheduleEntryNotFoundException.class, () -> scheduleEntryService.deleteScheduleEntry(null));
-    }
-
-    @Test
     void shouldNotDeleteInvalidID() {
         Long randomID = 333L;
         assertThrows(ScheduleEntryNotFoundException.class,
                 () -> scheduleEntryService.deleteScheduleEntry(randomID));
-    }
-
-    @Test
-    void shouldNotGetNullID() {
-        assertThrows(ScheduleEntryNotFoundException.class, () -> scheduleEntryService.getScheduleEntry(null));
     }
 
     @Test

@@ -113,8 +113,9 @@ public class WorkoutServiceIntegrationTest {
 
     @Test
     void shouldNotCreateIfExercisePlansThrow() {
+        Long randomID = 333L;
         CreateExercisePlanCommand createExercisePlanCommandWithError = new CreateExercisePlanCommand(
-                null,
+                randomID,
                 sets);
         plans.add(createExercisePlanCommandWithError);
         createCommand = new CreateWorkoutCommand(
@@ -293,12 +294,6 @@ public class WorkoutServiceIntegrationTest {
 
     @Test
     @Transactional
-    void shouldNotGetWorkoutWithNullID() {
-        assertThrows(WorkoutNotFoundException.class, () -> workoutService.getWorkout(null));
-    }
-
-    @Test
-    @Transactional
     void shouldNotGetWorkoutWithInvalidID() {
         Long randomID = 333L;
         assertThrows(WorkoutNotFoundException.class, () -> workoutService.getWorkout(randomID));
@@ -332,12 +327,6 @@ public class WorkoutServiceIntegrationTest {
         workoutService.deleteWorkout(createResponse.id());
         assertThrows(WorkoutNotFoundException.class, () -> workoutService.getWorkout(createResponse.id()));
         assertEquals(0, workoutService.getAllWorkouts().size());
-    }
-
-    @Test
-    @Transactional
-    void shouldNotDeleteNullID() {
-        assertThrows(WorkoutNotFoundException.class, () -> workoutService.deleteWorkout(null));
     }
 
     @Test

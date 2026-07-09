@@ -36,10 +36,9 @@ public class ExercisePlanService {
 
     @Transactional
     public ExercisePlanResponse addExercisePlan(CreateExercisePlanCommand command, Workout workout) {
-        if (command.exerciseId() == null || !exerciseRepo.existsById(command.exerciseId())) {
-            throw new BusinessException("Exercise ID must be valid");
-        }
-        Exercise exercise = exerciseRepo.getReferenceById(command.exerciseId());
+        Exercise exercise = exerciseRepo.findById(command.exerciseId())
+                .orElseThrow(() -> new BusinessException("Exercise ID must be valid"));
+
         ExercisePlan plan = exercisePlanRepo.save(new ExercisePlan(exercise, workout));
 
         if (command.sets() != null) {
@@ -55,22 +54,18 @@ public class ExercisePlanService {
 
     @Transactional
     public ExercisePlanResponse updateExercisePlan(UpdateExercisePlanCommand command) {
-        if (command.id() == null || !exercisePlanRepo.existsById(command.id())) {
-            throw new ExercisePlanNotFoundException(command.id());
-        }
-
         if (command.shouldDelete() != null && command.shouldDelete()) {
             deleteExercisePlan(command.id());
             return null;
         }
 
-        ExercisePlan plan = exercisePlanRepo.getReferenceById(command.id());
+        ExercisePlan plan = exercisePlanRepo.findById(command.id())
+                .orElseThrow(() -> new ExercisePlanNotFoundException(command.id()));
+
         if (command.exerciseId() != null && command.exerciseId() != plan.getExercise().getId()) {
             plan.getExercise().removeExercisePlan(plan);
-            if (!exerciseRepo.existsById(command.exerciseId())) {
-                throw new BusinessException("Exercise ID must be valid");
-            }
-            Exercise exercise = exerciseRepo.getReferenceById(command.exerciseId());
+            Exercise exercise = exerciseRepo.findById(command.exerciseId())
+                    .orElseThrow(() -> new BusinessException("Exercise ID must be valid"));
             plan.setExercise(exercise);
             exercise.addExercisePlan(plan);
         }
@@ -89,21 +84,17 @@ public class ExercisePlanService {
         return ExercisePlanMapper.toResponse(plan);
     }
 
+    @Transactional
     public void deleteExercisePlan(Long id) {
-        if (id == null || !exercisePlanRepo.existsById(id)) {
-            throw new ExercisePlanNotFoundException(id);
-        }
-        ExercisePlan plan = exercisePlanRepo.getReferenceById(id);
+        ExercisePlan plan = exercisePlanRepo.findById(id).orElseThrow(() -> new ExercisePlanNotFoundException(id));
         plan.getExercise().removeExercisePlan(plan);
         plan.getWorkout().removeExercisePlan(plan);
         exercisePlanRepo.deleteById(id);
     }
 
     public ExercisePlanResponse getExercisePlan(Long id) {
-        if (id == null || !exercisePlanRepo.existsById(id)) {
-            throw new ExercisePlanNotFoundException(id);
-        }
-        return ExercisePlanMapper.toResponse(exercisePlanRepo.getReferenceById(id));
+        ExercisePlan plan = exercisePlanRepo.findById(id).orElseThrow(() -> new ExercisePlanNotFoundException(id));
+        return ExercisePlanMapper.toResponse(plan);
     }
 
     public List<ExercisePlanResponse> getAllExercisePlans() {

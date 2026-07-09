@@ -126,7 +126,7 @@ public class WorkoutPlanServiceIntegrationTest {
         Workout newWorkout = new Workout(
                 "Nome do Workout",
                 "Descrição do Workout");
-        newWorkout = workoutRepo.saveAndFlush(workout);
+        newWorkout = workoutRepo.saveAndFlush(newWorkout);
         WorkoutPlanResponse createResponse = workoutPlanService.addWorkoutPlan(createCommand);
         UpdateWorkoutPlanCommand updateWorkoutPlanCommand = new UpdateWorkoutPlanCommand(
                 createResponse.id(),

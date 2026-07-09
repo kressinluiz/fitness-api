@@ -48,10 +48,8 @@ public class WorkoutService {
 
     @Transactional
     public WorkoutResponse updateWorkout(UpdateWorkoutCommand command) {
-        if (command.id() == null || !workoutRepo.existsById(command.id())) {
-            throw new WorkoutNotFoundException(command.id());
-        }
-        Workout workout = workoutRepo.getReferenceById(command.id());
+        Workout workout = workoutRepo.findById(command.id())
+                .orElseThrow(() -> new WorkoutNotFoundException(command.id()));
 
         if (command.name() != null && !command.name().isBlank()) {
             workout.setName(command.name());
@@ -76,25 +74,17 @@ public class WorkoutService {
         return WorkoutMapper.toResponse(workout);
     }
 
-    @Transactional
     public List<WorkoutResponse> getAllWorkouts() {
         return WorkoutMapper.toResponseList(workoutRepo.findAll());
     }
 
     public WorkoutResponse getWorkout(Long id) {
-        if (id == null || !workoutRepo.existsById(id)) {
-            throw new WorkoutNotFoundException(id);
-        }
-        return WorkoutMapper.toResponse(workoutRepo.getReferenceById(id));
+        return WorkoutMapper.toResponse(workoutRepo.findById(id).orElseThrow(() -> new WorkoutNotFoundException(id)));
     }
 
     @Transactional
     public void deleteWorkout(Long id) {
-        if (id == null || !workoutRepo.existsById(id)) {
-            throw new WorkoutNotFoundException(id);
-        }
-
-        Workout workout = workoutRepo.getReferenceById(id);
+        Workout workout = workoutRepo.findById(id).orElseThrow(() -> new WorkoutNotFoundException(id));
         if (workout.getExercisePlans() != null) {
             for (ExercisePlan plan : new ArrayList<>(workout.getExercisePlans())) {
                 exercisePlanService.deleteExercisePlan(plan.getId());

@@ -32,14 +32,13 @@ public class WorkoutPlanService {
 
     @Transactional
     public WorkoutPlanResponse addWorkoutPlan(CreateWorkoutPlanCommand command) {
-        if (command.workoutId() == null || !workoutRepo.existsById(command.workoutId())) {
-            throw new BusinessException("Workout ID must be valid");
-        }
         if (command.workoutDate() == null) {
             throw new BusinessException("WorkoutDate create command must be valid");
         }
 
-        Workout workout = workoutRepo.getReferenceById(command.workoutId());
+        Workout workout = workoutRepo.findById(command.workoutId())
+                .orElseThrow(() -> new BusinessException("Workout ID must be valid"));
+
         WorkoutPlan workoutPlan = new WorkoutPlan(workout);
         workoutDateService.addWorkoutDate(command.workoutDate(), workoutPlan);
 
@@ -48,14 +47,13 @@ public class WorkoutPlanService {
 
     @Transactional
     public WorkoutPlanResponse updateWorkoutPlan(UpdateWorkoutPlanCommand command) {
-        if (command.id() == null || !workoutPlanRepo.existsById(command.id())) {
-            throw new WorkoutPlanNotFoundException(command.id());
-        }
-        WorkoutPlan workoutPlan = workoutPlanRepo.getReferenceById(command.id());
+        WorkoutPlan workoutPlan = workoutPlanRepo.findById(command.id())
+                .orElseThrow(() -> new WorkoutPlanNotFoundException(command.id()));
 
         if (command.workoutId() != null) {
             workoutPlan.getWorkout().removeWorkoutPlan(workoutPlan);
-            Workout workout = workoutRepo.getReferenceById(command.workoutId());
+            Workout workout = workoutRepo.findById(command.workoutId())
+                    .orElseThrow(() -> new BusinessException("Workout ID must be valid"));
             workoutPlan.setWorkout(workout);
         }
 
@@ -66,12 +64,15 @@ public class WorkoutPlanService {
         return WorkoutPlanMapper.toResponse(workoutPlan);
     }
 
+    // This @Transactional is hiding a lazyinitialization exception.
+    // We need to improve this in the future to avoid N+1 queries and to avoid
+    // lazyinitialization exceptions.
+    // Let's have smaller DTOs and avoid returning the entire object graph.
     @Transactional
     public WorkoutPlanResponse getWorkoutPlan(Long id) {
-        if (id == null || !workoutPlanRepo.existsById(id)) {
-            throw new WorkoutPlanNotFoundException(id);
-        }
-        return WorkoutPlanMapper.toResponse(workoutPlanRepo.getReferenceById(id));
+        WorkoutPlan workoutPlan = workoutPlanRepo.findById(id)
+                .orElseThrow(() -> new WorkoutPlanNotFoundException(id));
+        return WorkoutPlanMapper.toResponse(workoutPlan);
     }
 
     @Transactional
@@ -79,6 +80,7 @@ public class WorkoutPlanService {
         return WorkoutPlanMapper.toResponseList(workoutPlanRepo.findAll());
     }
 
+    @Transactional
     public void deleteWorkoutPlan(Long id) {
         if (id == null || !workoutPlanRepo.existsById(id)) {
             throw new WorkoutPlanNotFoundException(id);

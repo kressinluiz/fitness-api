@@ -102,14 +102,6 @@ public class ExercisePlanServiceIntegrationTest {
     }
 
     @Test
-    void shouldNotCreateExercisePlanWithNullExerciseID() {
-        createCommand = new CreateExercisePlanCommand(
-                null,
-                sets);
-        assertThrows(BusinessException.class, () -> exercisePlanService.addExercisePlan(createCommand, workout));
-    }
-
-    @Test
     void shouldNotCreateExercisePlanWithInvalidExerciseID() {
         createCommand = new CreateExercisePlanCommand(
                 333L,
@@ -297,11 +289,6 @@ public class ExercisePlanServiceIntegrationTest {
     }
 
     @Test
-    void shouldThrowDeletingExercisePlanWithNullID() {
-        assertThrows(ExercisePlanNotFoundException.class, () -> exercisePlanService.deleteExercisePlan(null));
-    }
-
-    @Test
     void shouldThrowDeletingInvalidExercisePlan() {
         Long randomID = 333L;
         assertThrows(ExercisePlanNotFoundException.class, () -> exercisePlanService.deleteExercisePlan(randomID));
@@ -317,11 +304,6 @@ public class ExercisePlanServiceIntegrationTest {
         assertEquals(createResponse.exerciseSets().get(0).id(), getResponse.exerciseSets().get(0).id());
         assertEquals(createResponse.exerciseSets().get(1).id(), getResponse.exerciseSets().get(1).id());
         assertEquals(createResponse.exerciseSets().get(2).id(), getResponse.exerciseSets().get(2).id());
-    }
-
-    @Test
-    void shouldThrowWhenGetNullPlanID() {
-        assertThrows(ExercisePlanNotFoundException.class, () -> exercisePlanService.getExercisePlan(null));
     }
 
     @Test

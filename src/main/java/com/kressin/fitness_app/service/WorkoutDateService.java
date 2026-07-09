@@ -49,11 +49,8 @@ public class WorkoutDateService {
 
     @Transactional
     public WorkoutDateResponse updateWorkoutDate(UpdateWorkoutDateCommand command) {
-        if (command.id() == null || !workoutDateRepo.existsById(command.id())) {
-            throw new WorkoutDateNotFoundException(command.id());
-        }
-
-        WorkoutDate workoutDate = workoutDateRepo.getReferenceById(command.id());
+        WorkoutDate workoutDate = workoutDateRepo.findById(command.id())
+                .orElseThrow(() -> new WorkoutDateNotFoundException(command.id()));
 
         if (command.scheduleType() != null) {
             workoutDate.setScheduleType(command.scheduleType());
@@ -77,14 +74,15 @@ public class WorkoutDateService {
         return WorkoutDateMapper.toResponse(workoutDate);
     }
 
-    @Transactional
     public WorkoutDateResponse getWorkoutDate(Long id) {
-        if (id == null || !workoutDateRepo.existsById(id)) {
-            throw new WorkoutDateNotFoundException(id);
-        }
-        return WorkoutDateMapper.toResponse(workoutDateRepo.getReferenceById(id));
+        WorkoutDate workoutDate = workoutDateRepo.findById(id).orElseThrow(() -> new WorkoutDateNotFoundException(id));
+        return WorkoutDateMapper.toResponse(workoutDate);
     }
 
+    // This @Transactional is hiding a lazyinitialization exception.
+    // We need to improve this in the future to avoid N+1 queries and to avoid
+    // lazyinitialization exceptions.
+    // Let's have smaller DTOs and avoid returning the entire object graph.
     @Transactional
     public List<WorkoutDateResponse> getAllWorkoutDates() {
         return WorkoutDateMapper.toResponseList(workoutDateRepo.findAll());

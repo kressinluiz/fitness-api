@@ -37,16 +37,13 @@ public class ExerciseSetService {
 
     @Transactional
     public ExerciseSetResponse updateExerciseSet(UpdateExerciseSetCommand command) {
-        if (command.id() == null || !exerciseSetRepo.existsById(command.id())) {
-            throw new ExerciseSetNotFoundException(command.id());
-        }
-
         if (command.shouldDelete() != null && command.shouldDelete()) {
             deleteExerciseSet(command.id());
             return null;
         }
 
-        ExerciseSet set = exerciseSetRepo.getReferenceById(command.id());
+        ExerciseSet set = exerciseSetRepo.findById(command.id())
+                .orElseThrow(() -> new ExerciseSetNotFoundException(command.id()));
         if (command.reps() != null) {
             set.setReps(command.reps());
         }
@@ -58,20 +55,16 @@ public class ExerciseSetService {
         return ExerciseSetMapper.toResponse(set);
     }
 
+    @Transactional
     public void deleteExerciseSet(Long id) {
-        if (id == null || !exerciseSetRepo.existsById(id)) {
-            throw new ExerciseSetNotFoundException(id);
-        }
-        ExerciseSet set = exerciseSetRepo.getReferenceById(id);
+        ExerciseSet set = exerciseSetRepo.findById(id).orElseThrow(() -> new ExerciseSetNotFoundException(id));
         set.getExercisePlan().removeExerciseSet(set);
         exerciseSetRepo.deleteById(id);
     }
 
     public ExerciseSetResponse getExerciseSet(Long id) {
-        if (id == null || !exerciseSetRepo.existsById(id)) {
-            throw new ExerciseSetNotFoundException(id);
-        }
-        return ExerciseSetMapper.toResponse(exerciseSetRepo.getReferenceById(id));
+        return ExerciseSetMapper
+                .toResponse(exerciseSetRepo.findById(id).orElseThrow(() -> new ExerciseSetNotFoundException(id)));
     }
 
     public List<ExerciseSetResponse> getAllExerciseSets() {

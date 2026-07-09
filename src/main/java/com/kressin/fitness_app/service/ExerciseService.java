@@ -12,6 +12,8 @@ import com.kressin.fitness_app.repository.ExerciseRepository;
 import com.kressin.fitness_app.service.command.CreateExerciseCommand;
 import com.kressin.fitness_app.service.command.UpdateExerciseCommand;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ExerciseService {
     private final ExerciseRepository repository;
@@ -20,6 +22,7 @@ public class ExerciseService {
         this.repository = repository;
     }
 
+    @Transactional
     public ExerciseResponse addExercise(CreateExerciseCommand command) {
         Exercise exercise = new Exercise(
                 command.name(),
@@ -30,11 +33,10 @@ public class ExerciseService {
         return ExerciseMapper.toResponse(repository.save(exercise));
     }
 
+    @Transactional
     public ExerciseResponse updateExercise(UpdateExerciseCommand command) {
-        if (command.id() == null || !repository.existsById(command.id())) {
-            throw new ExerciseNotFoundException(command.id());
-        }
-        Exercise exercise = repository.getReferenceById(command.id());
+        Exercise exercise = repository.findById(command.id())
+                .orElseThrow(() -> new ExerciseNotFoundException(command.id()));
         if (command.name() != null) {
             exercise.setName(command.name());
         }
@@ -51,18 +53,16 @@ public class ExerciseService {
         return ExerciseMapper.toResponse(repository.save(exercise));
     }
 
+    @Transactional
     public void deleteExercise(Long id) {
-        if (id == null || !repository.existsById(id)) {
+        if (!repository.existsById(id)) {
             throw new ExerciseNotFoundException(id);
         }
         repository.deleteById(id);
     }
 
     public ExerciseResponse getExercise(Long id) {
-        if (id == null || !repository.existsById(id)) {
-            throw new ExerciseNotFoundException(id);
-        }
-        return ExerciseMapper.toResponse(repository.getReferenceById(id));
+        return ExerciseMapper.toResponse(repository.findById(id).orElseThrow(() -> new ExerciseNotFoundException(id)));
     }
 
     public List<ExerciseResponse> getAllExercises() {
