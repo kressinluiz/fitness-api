@@ -19,10 +19,15 @@ import com.kressin.fitness_app.dto.UpdateExerciseRequest;
 import com.kressin.fitness_app.mapper.ExerciseMapper;
 import com.kressin.fitness_app.service.ExerciseService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/exercise")
+@RequestMapping("/exercises")
+@Tag(name = "Exercises", description = "Exercise management")
 public class ExerciseController {
     private final ExerciseService service;
 
@@ -30,27 +35,52 @@ public class ExerciseController {
         this.service = service;
     }
 
-    @GetMapping("/{id}")
-    public ExerciseResponse getExercise(@PathVariable Long id) {
-        return service.getExercise(id);
-    }
-
-    @GetMapping
-    public List<ExerciseResponse> getExercises() {
-        return service.getAllExercises();
-    }
-
+    @Operation(summary = "Create an exercise")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Exercise created"),
+            @ApiResponse(responseCode = "400", description = "Invalid request"),
+    })
     @PostMapping
     public ResponseEntity<ExerciseResponse> addExercise(@Valid @RequestBody CreateExerciseRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.addExercise(ExerciseMapper.toCreateCommand(request)));
     }
 
+    @Operation(summary = "Get an exercise")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Exercise found"),
+            @ApiResponse(responseCode = "404", description = "Exercise not found"),
+    })
+    @GetMapping("/{id}")
+    public ExerciseResponse getExercise(@PathVariable Long id) {
+        return service.getExercise(id);
+    }
+
+    @Operation(summary = "Get all exercises")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Exercises found"),
+    })
+    @GetMapping
+    public List<ExerciseResponse> getExercises() {
+        return service.getAllExercises();
+    }
+
+    @Operation(summary = "Update an exercise")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Exercise updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid request"),
+            @ApiResponse(responseCode = "404", description = "Exercise not found"),
+    })
     @PatchMapping("/{id}")
     public ExerciseResponse updateExercise(@PathVariable Long id, @Valid @RequestBody UpdateExerciseRequest request) {
         return service.updateExercise(ExerciseMapper.toUpdateCommand(request, id));
     }
 
+    @Operation(summary = "Delete an exercise")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Exercise deleted"),
+            @ApiResponse(responseCode = "404", description = "Exercise not found"),
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteExercise(@PathVariable Long id) {
         service.deleteExercise(id);
