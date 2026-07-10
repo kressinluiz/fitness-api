@@ -70,8 +70,110 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    @ExceptionHandler(ExerciseSetNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleExerciseSetNotFound(
+            ExerciseNotFoundException exception,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                exception.getMessage(),
+                request.getRequestURI(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(ExercisePlanNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleExercisePlanNotFound(
+            ExerciseNotFoundException exception,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                exception.getMessage(),
+                request.getRequestURI(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(WorkoutNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleWorkoutNotFound(
+            ExerciseNotFoundException exception,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                exception.getMessage(),
+                request.getRequestURI(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(WorkoutPlanNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleWorkoutPlanNotFound(
+            ExerciseNotFoundException exception,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                exception.getMessage(),
+                request.getRequestURI(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(WorkoutDateNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleWorkoutDateNotFound(
+            ExerciseNotFoundException exception,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                exception.getMessage(),
+                request.getRequestURI(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(ScheduleEntryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleScheduleEntryNotFound(
+            ExerciseNotFoundException exception,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                exception.getMessage(),
+                request.getRequestURI(),
+                null);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidExercise(
+    public ResponseEntity<ErrorResponse> handleBusinessException(
             BusinessException exception,
             HttpServletRequest request) {
 
