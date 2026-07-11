@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ExerciseSetNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleExerciseSetNotFound(
-            ExerciseNotFoundException exception,
+            ExerciseSetNotFoundException exception,
             HttpServletRequest request) {
 
         ErrorResponse error = new ErrorResponse(
@@ -89,7 +89,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ExercisePlanNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleExercisePlanNotFound(
-            ExerciseNotFoundException exception,
+            ExercisePlanNotFoundException exception,
             HttpServletRequest request) {
 
         ErrorResponse error = new ErrorResponse(
@@ -106,7 +106,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WorkoutNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleWorkoutNotFound(
-            ExerciseNotFoundException exception,
+            WorkoutNotFoundException exception,
             HttpServletRequest request) {
 
         ErrorResponse error = new ErrorResponse(
@@ -123,7 +123,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WorkoutPlanNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleWorkoutPlanNotFound(
-            ExerciseNotFoundException exception,
+            WorkoutPlanNotFoundException exception,
             HttpServletRequest request) {
 
         ErrorResponse error = new ErrorResponse(
@@ -140,7 +140,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WorkoutDateNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleWorkoutDateNotFound(
-            ExerciseNotFoundException exception,
+            WorkoutDateNotFoundException exception,
             HttpServletRequest request) {
 
         ErrorResponse error = new ErrorResponse(
@@ -157,7 +157,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ScheduleEntryNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleScheduleEntryNotFound(
-            ExerciseNotFoundException exception,
+            ScheduleEntryNotFoundException exception,
             HttpServletRequest request) {
 
         ErrorResponse error = new ErrorResponse(

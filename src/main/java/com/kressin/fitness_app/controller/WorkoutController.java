@@ -19,10 +19,15 @@ import com.kressin.fitness_app.dto.WorkoutResponse;
 import com.kressin.fitness_app.mapper.WorkoutMapper;
 import com.kressin.fitness_app.service.WorkoutService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/workout")
+@RequestMapping("/workouts")
+@Tag(name = "Workouts", description = "Workout management")
 public class WorkoutController {
     private final WorkoutService service;
 
@@ -30,31 +35,55 @@ public class WorkoutController {
         this.service = workoutService;
     }
 
+    @Operation(summary = "Create a workout")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Workout created"),
+            @ApiResponse(responseCode = "400", description = "Invalid request"),
+    })
     @PostMapping
     public ResponseEntity<WorkoutResponse> addWorkout(@Valid @RequestBody CreateWorkoutRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.addWorkout(WorkoutMapper.toCreateCommand(request)));
     }
 
-    @PatchMapping("/{id}")
-    public WorkoutResponse updateWorkout(@PathVariable Long id, @Valid @RequestBody UpdateWorkoutRequest request) {
-        return service.updateWorkout(WorkoutMapper.toUpdateCommand(request, id));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWorkout(@PathVariable Long id) {
-        service.deleteWorkout(id);
-        return ResponseEntity.noContent().build();
-    }
-
+    @Operation(summary = "Get a workout")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Workout found"),
+            @ApiResponse(responseCode = "404", description = "Workout not found"),
+    })
     @GetMapping("/{id}")
     public WorkoutResponse getWorkout(@PathVariable Long id) {
         return service.getWorkout(id);
     }
 
+    @Operation(summary = "Get all workouts")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Workouts found"),
+    })
     @GetMapping
     public List<WorkoutResponse> getWorkouts() {
         return service.getAllWorkouts();
     }
 
+    @Operation(summary = "Update a workout")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Workout updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid request"),
+            @ApiResponse(responseCode = "404", description = "Workout not found"),
+    })
+    @PatchMapping("/{id}")
+    public WorkoutResponse updateWorkout(@PathVariable Long id, @Valid @RequestBody UpdateWorkoutRequest request) {
+        return service.updateWorkout(WorkoutMapper.toUpdateCommand(request, id));
+    }
+
+    @Operation(summary = "Delete a workout")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Workout deleted"),
+            @ApiResponse(responseCode = "404", description = "Workout not found"),
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteWorkout(@PathVariable Long id) {
+        service.deleteWorkout(id);
+        return ResponseEntity.noContent().build();
+    }
 }

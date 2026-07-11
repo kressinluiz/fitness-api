@@ -51,7 +51,7 @@ public class WorkoutService {
         Workout workout = workoutRepo.findById(command.id())
                 .orElseThrow(() -> new WorkoutNotFoundException(command.id()));
 
-        if (command.name() != null && !command.name().isBlank()) {
+        if (command.name() != null) {
             workout.setName(command.name());
         }
 
