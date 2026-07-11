@@ -26,14 +26,15 @@ public class WorkoutMapper {
         return new CreateWorkoutCommand(
                 workout.name(),
                 workout.description(),
-                ExercisePlanMapper.toCreateCommandList(workout.exercisePlans()));
+                workout.exercisePlans() != null ? ExercisePlanMapper.toCreateCommandList(workout.exercisePlans())
+                        : null);
     }
 
     public static UpdateWorkoutCommand toUpdateCommand(UpdateWorkoutRequest workout, Long id) {
         return new UpdateWorkoutCommand(
                 id,
-                workout.name(),
-                workout.description(),
+                workout.name() != null ? workout.name() : null,
+                workout.description() != null ? workout.description() : null,
                 workout.exercisePlans() != null ? ExercisePlanMapper.toUpdateCommandList(workout.exercisePlans())
                         : null);
     }

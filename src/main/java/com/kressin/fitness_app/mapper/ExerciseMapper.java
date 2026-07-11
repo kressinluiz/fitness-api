@@ -34,9 +34,9 @@ public class ExerciseMapper {
     public static UpdateExerciseCommand toUpdateCommand(UpdateExerciseRequest request, Long id) {
         return new UpdateExerciseCommand(
                 id,
-                request.name(),
-                request.description(),
-                request.category(),
-                request.muscleGroup());
+                request.name() != null ? request.name() : null,
+                request.description() != null ? request.description() : null,
+                request.category() != null ? request.category() : null,
+                request.muscleGroup() != null ? request.muscleGroup() : null);
     }
 }
