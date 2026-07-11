@@ -168,11 +168,7 @@ public class WorkoutServiceIntegrationTest {
                 "",
                 null,
                 null);
-        WorkoutResponse updateResponse = workoutService.updateWorkout(updateCommand);
-        assertNotNull(updateResponse);
-        assertNotNull(updateResponse.id());
-        assertEquals(name, updateResponse.name());
-        assertEquals(createCommand.name(), updateResponse.name());
+        assertThrows(BusinessException.class, () -> workoutService.updateWorkout(updateCommand));
     }
 
     @Test

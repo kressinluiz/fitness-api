@@ -19,8 +19,8 @@ public class WorkoutPlanMapper {
     public static UpdateWorkoutPlanCommand toUpdateCommand(UpdateWorkoutPlanRequest request, Long id) {
         return new UpdateWorkoutPlanCommand(
                 id,
-                request.workoutId(),
-                WorkoutDateMapper.toUpdateCommand(request.workoutDate()));
+                request.workoutId() != null ? request.workoutId() : null,
+                request.workoutDate() != null ? WorkoutDateMapper.toUpdateCommand(request.workoutDate()) : null);
     }
 
     public static WorkoutPlanResponse toResponse(WorkoutPlan plan) {

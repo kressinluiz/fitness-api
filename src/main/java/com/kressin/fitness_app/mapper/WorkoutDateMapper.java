@@ -19,8 +19,9 @@ public class WorkoutDateMapper {
     public static UpdateWorkoutDateCommand toUpdateCommand(UpdateWorkoutDateRequest request) {
         return new UpdateWorkoutDateCommand(
                 request.id(),
-                request.scheduleType(),
-                ScheduleEntryMapper.toUpdateCommandList(request.scheduleEntries()));
+                request.scheduleType() != null ? request.scheduleType() : null,
+                request.scheduleEntries() != null ? ScheduleEntryMapper.toUpdateCommandList(request.scheduleEntries())
+                        : null);
     }
 
     public static WorkoutDateResponse toResponse(WorkoutDate workoutDate) {
