@@ -1,4 +1,4 @@
-# Fitness App
+# Fitness API
 
 [![CI](https://github.com/kressinluiz/fitness-api/actions/workflows/ci.yml/badge.svg)](https://github.com/kressinluiz/fitness-api/actions/workflows/ci.yml)
 
