@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kressin.fitness_app.dto.ExerciseResponse;
 import com.kressin.fitness_app.exception.BusinessException;
@@ -20,9 +19,8 @@ import com.kressin.fitness_app.service.command.UpdateExerciseCommand;
 
 import jakarta.transaction.Transactional;
 
-@SpringBootTest
 @Transactional
-public class ExerciseServiceIntegrationTest {
+public class ExerciseServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     ExerciseService exerciseService;

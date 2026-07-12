@@ -11,7 +11,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kressin.fitness_app.dto.ExercisePlanResponse;
 import com.kressin.fitness_app.entity.Exercise;
@@ -28,9 +27,8 @@ import com.kressin.fitness_app.service.command.UpdateExerciseSetCommand;
 
 import jakarta.transaction.Transactional;
 
-@SpringBootTest
 @Transactional
-public class ExercisePlanServiceIntegrationTest {
+public class ExercisePlanServiceIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     ExercisePlanService exercisePlanService;
 

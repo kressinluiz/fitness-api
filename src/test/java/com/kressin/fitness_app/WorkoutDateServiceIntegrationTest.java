@@ -13,13 +13,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kressin.fitness_app.dto.WorkoutDateResponse;
 import com.kressin.fitness_app.entity.ScheduleType;
 import com.kressin.fitness_app.entity.Workout;
 import com.kressin.fitness_app.entity.WorkoutPlan;
 import com.kressin.fitness_app.exception.BusinessException;
+import com.kressin.fitness_app.repository.WorkoutDateRepository;
 import com.kressin.fitness_app.repository.WorkoutPlanRepository;
 import com.kressin.fitness_app.repository.WorkoutRepository;
 import com.kressin.fitness_app.service.WorkoutDateService;
@@ -30,10 +30,12 @@ import com.kressin.fitness_app.service.command.UpdateWorkoutDateCommand;
 
 import jakarta.transaction.Transactional;
 
-@SpringBootTest
-public class WorkoutDateServiceIntegrationTest {
+public class WorkoutDateServiceIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     WorkoutDateService workoutDateService;
+
+    @Autowired
+    WorkoutDateRepository workoutDateRepo;
 
     @Autowired
     WorkoutPlanRepository workoutPlanRepo;
@@ -73,6 +75,7 @@ public class WorkoutDateServiceIntegrationTest {
     void cleanUp() {
         workoutRepo.deleteAll();
         workoutPlanRepo.deleteAll();
+        workoutDateRepo.deleteAll();
     }
 
     @Test

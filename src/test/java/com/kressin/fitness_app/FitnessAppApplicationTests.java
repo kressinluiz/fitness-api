@@ -1,13 +1,13 @@
-package com.kressin.fitness_app;
+// package com.kressin.fitness_app;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class FitnessAppApplicationTests {
+// @SpringBootTest
+// class FitnessAppApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+// @Test
+// void contextLoads() {
+// }
 
-}
+// }

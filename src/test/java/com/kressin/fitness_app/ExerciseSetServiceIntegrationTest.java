@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kressin.fitness_app.dto.ExerciseSetResponse;
 import com.kressin.fitness_app.entity.Exercise;
@@ -26,9 +26,8 @@ import com.kressin.fitness_app.service.command.UpdateExerciseSetCommand;
 
 import jakarta.transaction.Transactional;
 
-@SpringBootTest
 @Transactional
-public class ExerciseSetServiceIntegrationTest {
+public class ExerciseSetServiceIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     ExerciseSetService exerciseSetService;
 
@@ -63,6 +62,14 @@ public class ExerciseSetServiceIntegrationTest {
         reps = 10;
         weight = 120.0;
         createCommand = new CreateExerciseSetCommand(reps, weight);
+    }
+
+    @AfterEach
+    void cleanUp() {
+        exerciseSetService.getAllExerciseSets().forEach(set -> exerciseSetService.deleteExerciseSet(set.id()));
+        exercisePlanRepository.deleteAll();
+        exerciseRepository.deleteAll();
+        workoutRepository.deleteAll();
     }
 
     @Test

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kressin.fitness_app.dto.WorkoutPlanResponse;
 import com.kressin.fitness_app.entity.ScheduleType;
@@ -28,8 +27,7 @@ import com.kressin.fitness_app.service.command.CreateWorkoutDateCommand;
 import com.kressin.fitness_app.service.command.CreateWorkoutPlanCommand;
 import com.kressin.fitness_app.service.command.UpdateWorkoutPlanCommand;
 
-@SpringBootTest
-public class WorkoutPlanServiceIntegrationTest {
+public class WorkoutPlanServiceIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     WorkoutPlanService workoutPlanService;
 

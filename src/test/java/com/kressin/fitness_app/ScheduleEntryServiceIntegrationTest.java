@@ -9,7 +9,6 @@ import java.time.ZonedDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kressin.fitness_app.dto.ScheduleEntryResponse;
 import com.kressin.fitness_app.entity.ScheduleType;
@@ -26,9 +25,8 @@ import com.kressin.fitness_app.service.command.UpdateScheduleEntryCommand;
 
 import jakarta.transaction.Transactional;
 
-@SpringBootTest
 @Transactional
-public class ScheduleEntryServiceIntegrationTest {
+public class ScheduleEntryServiceIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     ScheduleEntryService scheduleEntryService;
 

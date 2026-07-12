@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,10 +22,9 @@ import com.kressin.fitness_app.dto.WorkoutResponse;
 import jakarta.transaction.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
-@SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class WorkoutPlanControllerTest {
+public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
     @Autowired
     MockMvc mockMvc;
 
