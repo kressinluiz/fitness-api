@@ -8,23 +8,29 @@
 		<version>4.1.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>com.kressin</groupId>
 	<artifactId>fitness-app</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
+	<version>0.01</version>
+	<name>Fitness App API</name>
+	<description>A Spring Boot REST API for managing workouts, exercises and training schedules.</description>
+	<url>https://github.com/kressinluiz/fitness-api</url>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
 	<developers>
-		<developer/>
+		<developer>
+            <id>kressinluiz</id>
+            <name>Luiz Kressin</name>
+            <url>https://github.com/kressinluiz</url>
+        </developer>
 	</developers>
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+        <connection>scm:git:https://github.com/kressinluiz/fitness-api.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/kressinluiz/fitness-api.git</developerConnection>
+        <url>https://github.com/kressinluiz/fitness-api</url>
 	</scm>
 	<properties>
 		<java.version>26</java.version>
@@ -79,6 +85,41 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.8.9</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-flyway</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+             <version>1.21.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+             <version>1.21.3</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -87,6 +128,17 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>12.4.0</version>
+                <configuration>
+                    <url>jdbc:postgresql://localhost:5432/fitness</url>
+                    <user>fitness</user>
+                    <password>fitness</password>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 

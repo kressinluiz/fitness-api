@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -20,11 +21,11 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class WorkoutDate {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "workoutplan_id")
+    @OneToOne(mappedBy = "workoutDate")
+    @JoinColumn(name = "workout_plan_id")
     private WorkoutPlan workoutPlan;
 
     @Enumerated(EnumType.STRING)
