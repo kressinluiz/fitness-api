@@ -1,8 +1,9 @@
 package com.kressin.fitness_app.service;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.kressin.fitness_app.dto.WorkoutResponse;
@@ -74,8 +75,16 @@ public class WorkoutService {
         return WorkoutMapper.toResponse(workout);
     }
 
-    public List<WorkoutResponse> getAllWorkouts() {
-        return WorkoutMapper.toResponseList(workoutRepo.findAll());
+    public Page<WorkoutResponse> getAllWorkouts(Pageable pageable, String search) {
+        Page<Workout> page;
+
+        if (search == null || search.isBlank()) {
+            page = workoutRepo.findAll(pageable);
+        } else {
+            page = workoutRepo.findByNameContainingIgnoreCase(search, pageable);
+        }
+
+        return page.map(WorkoutMapper::toResponse);
     }
 
     public WorkoutResponse getWorkout(Long id) {

@@ -1,7 +1,7 @@
 package com.kressin.fitness_app.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.kressin.fitness_app.dto.ExerciseResponse;
@@ -65,7 +65,15 @@ public class ExerciseService {
         return ExerciseMapper.toResponse(repository.findById(id).orElseThrow(() -> new ExerciseNotFoundException(id)));
     }
 
-    public List<ExerciseResponse> getAllExercises() {
-        return ExerciseMapper.toResponseList(repository.findAll());
+    public Page<ExerciseResponse> getAllExercises(Pageable pageable, String search) {
+        Page<Exercise> page;
+
+        if (search == null || search.isBlank()) {
+            page = repository.findAll(pageable);
+        } else {
+            page = repository.findByNameContainingIgnoreCase(search, pageable);
+        }
+
+        return page.map(ExerciseMapper::toResponse);
     }
 }

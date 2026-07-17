@@ -1,7 +1,11 @@
 package com.kressin.fitness_app.service;
 
-import java.util.List;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.kressin.fitness_app.dto.WorkoutPlanResponse;
@@ -10,6 +14,7 @@ import com.kressin.fitness_app.entity.WorkoutPlan;
 import com.kressin.fitness_app.exception.BusinessException;
 import com.kressin.fitness_app.exception.WorkoutPlanNotFoundException;
 import com.kressin.fitness_app.mapper.WorkoutPlanMapper;
+import com.kressin.fitness_app.notification.WorkoutPlanCreatedDomainEvent;
 import com.kressin.fitness_app.repository.WorkoutPlanRepository;
 import com.kressin.fitness_app.repository.WorkoutRepository;
 import com.kressin.fitness_app.service.command.CreateWorkoutPlanCommand;
@@ -23,11 +28,14 @@ public class WorkoutPlanService {
     private final WorkoutRepository workoutRepo;
     private final WorkoutDateService workoutDateService;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     public WorkoutPlanService(WorkoutPlanRepository workoutPlanRepo, WorkoutRepository workoutRepo,
-            WorkoutDateService workoutDateService) {
+            WorkoutDateService workoutDateService, ApplicationEventPublisher eventPublisher) {
         this.workoutPlanRepo = workoutPlanRepo;
         this.workoutRepo = workoutRepo;
         this.workoutDateService = workoutDateService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -42,7 +50,12 @@ public class WorkoutPlanService {
         WorkoutPlan workoutPlan = new WorkoutPlan(workout);
         workoutDateService.addWorkoutDate(command.workoutDate(), workoutPlan);
 
-        return WorkoutPlanMapper.toResponse(workoutPlanRepo.save(workoutPlan));
+        workoutPlan = workoutPlanRepo.save(workoutPlan);
+
+        eventPublisher.publishEvent(
+                new WorkoutPlanCreatedDomainEvent(workoutPlan.getId(), UUID.randomUUID(), ZonedDateTime.now()));
+
+        return WorkoutPlanMapper.toResponse(workoutPlan);
     }
 
     @Transactional
@@ -55,6 +68,7 @@ public class WorkoutPlanService {
             Workout workout = workoutRepo.findById(command.workoutId())
                     .orElseThrow(() -> new BusinessException("Workout ID must be valid"));
             workoutPlan.setWorkout(workout);
+            workout.addWorkoutPlan(workoutPlan);
         }
 
         if (command.workoutDate() != null) {
@@ -76,8 +90,17 @@ public class WorkoutPlanService {
     }
 
     @Transactional
-    public List<WorkoutPlanResponse> getAllWorkoutPlans() {
-        return WorkoutPlanMapper.toResponseList(workoutPlanRepo.findAll());
+    public Page<WorkoutPlanResponse> getAllWorkoutPlans(Pageable pageable, String search) {
+
+        Page<WorkoutPlan> page;
+
+        if (search == null || search.isBlank()) {
+            page = workoutPlanRepo.findAll(pageable);
+        } else {
+            page = workoutPlanRepo.search(search, pageable);
+        }
+
+        return page.map(WorkoutPlanMapper::toResponse);
     }
 
     @Transactional

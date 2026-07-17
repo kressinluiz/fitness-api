@@ -1,7 +1,8 @@
 package com.kressin.fitness_app.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kressin.fitness_app.dto.CreateWorkoutPlanRequest;
@@ -61,8 +63,10 @@ public class WorkoutPlanController {
             @ApiResponse(responseCode = "200", description = "Workout plans found"),
     })
     @GetMapping
-    public List<WorkoutPlanResponse> getWorkoutPlans() {
-        return service.getAllWorkoutPlans();
+    public Page<WorkoutPlanResponse> getWorkoutPlans(
+            @PageableDefault(size = 20) Pageable pageable,
+            @RequestParam(required = false) String search) {
+        return service.getAllWorkoutPlans(pageable, search);
     }
 
     @Operation(summary = "Update a workout plan")
