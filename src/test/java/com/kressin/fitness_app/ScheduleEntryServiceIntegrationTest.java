@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +42,7 @@ public class ScheduleEntryServiceIntegrationTest extends AbstractIntegrationTest
 
     CreateScheduleEntryCommand createCommand;
     WorkoutDate workoutDate;
-    Integer weekDay;
+    DayOfWeek weekDay;
     ZonedDateTime dateTime;
 
     @BeforeEach
@@ -52,7 +53,7 @@ public class ScheduleEntryServiceIntegrationTest extends AbstractIntegrationTest
         workoutRepo.save(workout);
         workoutPlanRepo.save(workoutPlan);
         workoutDateRepo.save(workoutDate);
-        weekDay = 0;
+        weekDay = DayOfWeek.MONDAY;
         dateTime = ZonedDateTime.now();
         createCommand = new CreateScheduleEntryCommand(weekDay, dateTime);
     }
@@ -68,7 +69,7 @@ public class ScheduleEntryServiceIntegrationTest extends AbstractIntegrationTest
 
     @Test
     void shouldUpdateAllFields() {
-        Integer newWeekDay = 1;
+        DayOfWeek newWeekDay = DayOfWeek.THURSDAY;
         ZonedDateTime newDateTime = ZonedDateTime.now();
         ScheduleEntryResponse addResponse = scheduleEntryService.addScheduleEntry(createCommand, workoutDate);
         UpdateScheduleEntryCommand updateCommand = new UpdateScheduleEntryCommand(
@@ -91,7 +92,7 @@ public class ScheduleEntryServiceIntegrationTest extends AbstractIntegrationTest
 
     @Test
     void shouldUpdateWeekDay() {
-        Integer newWeekDay = 1;
+        DayOfWeek newWeekDay = DayOfWeek.THURSDAY;
         ScheduleEntryResponse addResponse = scheduleEntryService.addScheduleEntry(createCommand, workoutDate);
         UpdateScheduleEntryCommand updateCommand = new UpdateScheduleEntryCommand(
                 addResponse.id(),
@@ -135,7 +136,7 @@ public class ScheduleEntryServiceIntegrationTest extends AbstractIntegrationTest
 
     @Test
     void shouldNotUpdateWithInvalidID() {
-        Integer newWeekDay = 1;
+        DayOfWeek newWeekDay = DayOfWeek.THURSDAY;
         Long randomID = 333L;
         ZonedDateTime newDateTime = ZonedDateTime.now();
         UpdateScheduleEntryCommand updateCommand = new UpdateScheduleEntryCommand(

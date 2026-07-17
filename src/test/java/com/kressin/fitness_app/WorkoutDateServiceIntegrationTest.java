@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,11 +58,11 @@ public class WorkoutDateServiceIntegrationTest extends AbstractIntegrationTest {
         workoutPlanRepo.save(workoutPlan);
 
         entries = new ArrayList<>();
-        CreateScheduleEntryCommand firstEntry = new CreateScheduleEntryCommand(0, ZonedDateTime.now());
+        CreateScheduleEntryCommand firstEntry = new CreateScheduleEntryCommand(DayOfWeek.MONDAY, ZonedDateTime.now());
         entries.add(firstEntry);
-        CreateScheduleEntryCommand secondEntry = new CreateScheduleEntryCommand(0, ZonedDateTime.now());
+        CreateScheduleEntryCommand secondEntry = new CreateScheduleEntryCommand(DayOfWeek.MONDAY, ZonedDateTime.now());
         entries.add(secondEntry);
-        CreateScheduleEntryCommand thirdEntry = new CreateScheduleEntryCommand(0, ZonedDateTime.now());
+        CreateScheduleEntryCommand thirdEntry = new CreateScheduleEntryCommand(DayOfWeek.MONDAY, ZonedDateTime.now());
         entries.add(thirdEntry);
 
         scheduleType = ScheduleType.RECURRING;
@@ -86,17 +87,17 @@ public class WorkoutDateServiceIntegrationTest extends AbstractIntegrationTest {
         assertNotNull(addResponse.id());
         assertEquals(scheduleType, addResponse.scheduleType());
         assertEquals(3, addResponse.scheduleEntries().size());
-        assertEquals(0, addResponse.scheduleEntries().get(0).weekDay());
-        assertEquals(0, addResponse.scheduleEntries().get(1).weekDay());
-        assertEquals(0, addResponse.scheduleEntries().get(2).weekDay());
+        assertEquals(DayOfWeek.MONDAY, addResponse.scheduleEntries().get(0).weekDay());
+        assertEquals(DayOfWeek.MONDAY, addResponse.scheduleEntries().get(1).weekDay());
+        assertEquals(DayOfWeek.MONDAY, addResponse.scheduleEntries().get(2).weekDay());
         WorkoutDateResponse getResponse = workoutDateService.getWorkoutDate(addResponse.id());
         assertNotNull(getResponse);
         assertNotNull(getResponse.id());
         assertEquals(scheduleType, getResponse.scheduleType());
         assertEquals(3, getResponse.scheduleEntries().size());
-        assertEquals(0, getResponse.scheduleEntries().get(0).weekDay());
-        assertEquals(0, getResponse.scheduleEntries().get(1).weekDay());
-        assertEquals(0, getResponse.scheduleEntries().get(2).weekDay());
+        assertEquals(DayOfWeek.MONDAY, getResponse.scheduleEntries().get(0).weekDay());
+        assertEquals(DayOfWeek.MONDAY, getResponse.scheduleEntries().get(1).weekDay());
+        assertEquals(DayOfWeek.MONDAY, getResponse.scheduleEntries().get(2).weekDay());
     }
 
     @Test
@@ -142,14 +143,14 @@ public class WorkoutDateServiceIntegrationTest extends AbstractIntegrationTest {
         assertNotNull(updateResponse.id());
         assertEquals(newScheduleType, updateResponse.scheduleType());
         assertEquals(3, updateResponse.scheduleEntries().size());
-        assertEquals(0, updateResponse.scheduleEntries().get(0).weekDay());
-        assertEquals(0, updateResponse.scheduleEntries().get(1).weekDay());
-        assertEquals(0, updateResponse.scheduleEntries().get(2).weekDay());
+        assertEquals(DayOfWeek.MONDAY, updateResponse.scheduleEntries().get(0).weekDay());
+        assertEquals(DayOfWeek.MONDAY, updateResponse.scheduleEntries().get(1).weekDay());
+        assertEquals(DayOfWeek.MONDAY, updateResponse.scheduleEntries().get(2).weekDay());
     }
 
     @Test
     void shouldUpdateEntry() {
-        Integer newWeekDay = 2;
+        DayOfWeek newWeekDay = DayOfWeek.TUESDAY;
         WorkoutDateResponse addResponse = workoutDateService.addWorkoutDate(createCommand, workoutPlan);
         List<UpdateScheduleEntryCommand> entryUpdateCommandList = new ArrayList<>();
         UpdateScheduleEntryCommand updateEntryCommand = new UpdateScheduleEntryCommand(
@@ -169,8 +170,8 @@ public class WorkoutDateServiceIntegrationTest extends AbstractIntegrationTest {
         assertEquals(scheduleType, updateResponse.scheduleType());
         assertEquals(3, updateResponse.scheduleEntries().size());
         assertEquals(newWeekDay, updateResponse.scheduleEntries().get(0).weekDay());
-        assertEquals(0, updateResponse.scheduleEntries().get(1).weekDay());
-        assertEquals(0, updateResponse.scheduleEntries().get(2).weekDay());
+        assertEquals(DayOfWeek.MONDAY, updateResponse.scheduleEntries().get(1).weekDay());
+        assertEquals(DayOfWeek.MONDAY, updateResponse.scheduleEntries().get(2).weekDay());
     }
 
     @Test
@@ -180,7 +181,7 @@ public class WorkoutDateServiceIntegrationTest extends AbstractIntegrationTest {
         UpdateScheduleEntryCommand newEntry = new UpdateScheduleEntryCommand(
                 null,
                 null,
-                0,
+                DayOfWeek.MONDAY,
                 ZonedDateTime.now());
         entryUpdateCommandList.add(newEntry);
         UpdateWorkoutDateCommand updateCommand = new UpdateWorkoutDateCommand(
@@ -193,10 +194,10 @@ public class WorkoutDateServiceIntegrationTest extends AbstractIntegrationTest {
         assertNotNull(updateResponse.id());
         assertEquals(scheduleType, updateResponse.scheduleType());
         assertEquals(4, updateResponse.scheduleEntries().size());
-        assertEquals(0, updateResponse.scheduleEntries().get(0).weekDay());
-        assertEquals(0, updateResponse.scheduleEntries().get(1).weekDay());
-        assertEquals(0, updateResponse.scheduleEntries().get(2).weekDay());
-        assertEquals(0, updateResponse.scheduleEntries().get(3).weekDay());
+        assertEquals(DayOfWeek.MONDAY, updateResponse.scheduleEntries().get(0).weekDay());
+        assertEquals(DayOfWeek.MONDAY, updateResponse.scheduleEntries().get(1).weekDay());
+        assertEquals(DayOfWeek.MONDAY, updateResponse.scheduleEntries().get(2).weekDay());
+        assertEquals(DayOfWeek.MONDAY, updateResponse.scheduleEntries().get(3).weekDay());
     }
 
     @Test
@@ -206,7 +207,7 @@ public class WorkoutDateServiceIntegrationTest extends AbstractIntegrationTest {
         UpdateScheduleEntryCommand deleteEntry = new UpdateScheduleEntryCommand(
                 addResponse.scheduleEntries().get(1).id(),
                 true,
-                0,
+                DayOfWeek.MONDAY,
                 ZonedDateTime.now());
         entryUpdateCommandList.add(deleteEntry);
         UpdateWorkoutDateCommand updateCommand = new UpdateWorkoutDateCommand(

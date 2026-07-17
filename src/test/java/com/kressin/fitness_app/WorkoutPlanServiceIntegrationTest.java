@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,15 +56,15 @@ public class WorkoutPlanServiceIntegrationTest extends AbstractIntegrationTest {
 
         entries = new ArrayList<>();
         CreateScheduleEntryCommand firstEntry = new CreateScheduleEntryCommand(
-                0,
+                DayOfWeek.MONDAY,
                 ZonedDateTime.now());
         entries.add(firstEntry);
         CreateScheduleEntryCommand secondEntry = new CreateScheduleEntryCommand(
-                0,
+                DayOfWeek.MONDAY,
                 ZonedDateTime.now());
         entries.add(secondEntry);
         CreateScheduleEntryCommand thirdEntry = new CreateScheduleEntryCommand(
-                0,
+                DayOfWeek.MONDAY,
                 ZonedDateTime.now());
         entries.add(thirdEntry);
 

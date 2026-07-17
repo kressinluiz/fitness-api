@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,7 @@ public class ScheduleEntryUnitTests {
                 scheduleType);
         dateTime = ZonedDateTime.now();
         scheduleEntry = new ScheduleEntry(
-                1,
+                DayOfWeek.MONDAY,
                 dateTime,
                 workoutDate);
     }
@@ -45,35 +46,30 @@ public class ScheduleEntryUnitTests {
     @Test
     void shouldCreateWithValidArguments() {
         assertNotNull(scheduleEntry);
-        assertEquals(1, scheduleEntry.getWeekDay());
+        assertEquals(DayOfWeek.MONDAY, scheduleEntry.getWeekDay());
         assertEquals(dateTime, scheduleEntry.getDateTime());
         assertEquals(workoutDate, scheduleEntry.getWorkoutDate());
     }
 
     @Test
-    void shouldNotCreateWithInvalidWeekDay() {
-        assertThrows(BusinessException.class, () -> new ScheduleEntry(10, dateTime, workoutDate));
-    }
-
-    @Test
     void shouldNotCreateWithNullDateTime() {
-        assertThrows(BusinessException.class, () -> new ScheduleEntry(1, null, workoutDate));
+        assertThrows(BusinessException.class, () -> new ScheduleEntry(DayOfWeek.MONDAY, null, workoutDate));
     }
 
     @Test
     void shouldNotCreateWithNullWorkoutDate() {
-        assertThrows(BusinessException.class, () -> new ScheduleEntry(1, dateTime, null));
+        assertThrows(BusinessException.class, () -> new ScheduleEntry(DayOfWeek.MONDAY, dateTime, null));
     }
 
     @Test
     void shouldSetWithValidWeekDay() {
-        scheduleEntry.setWeekDay(2);
-        assertEquals(2, scheduleEntry.getWeekDay());
+        scheduleEntry.setWeekDay(DayOfWeek.TUESDAY);
+        assertEquals(DayOfWeek.TUESDAY, scheduleEntry.getWeekDay());
     }
 
     @Test
-    void shouldNotSetWithInvalidWeekDay() {
-        assertThrows(BusinessException.class, () -> scheduleEntry.setWeekDay(10));
+    void shouldNotSetWithNullWeekDay() {
+        assertThrows(BusinessException.class, () -> scheduleEntry.setWeekDay(null));
     }
 
     @Test

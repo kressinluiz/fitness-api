@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -61,12 +62,12 @@ public class WorkoutDateUnitTests {
     void shouldAddValidScheduleEntry() {
         ZonedDateTime dateTime = ZonedDateTime.now();
         ScheduleEntry entry = new ScheduleEntry(
-                1,
+                DayOfWeek.MONDAY,
                 dateTime,
                 workoutDate);
         assertNotNull(entry);
         assertEquals(dateTime, entry.getDateTime());
-        assertEquals(1, entry.getWeekDay());
+        assertEquals(DayOfWeek.MONDAY, entry.getWeekDay());
         assertEquals(workoutDate, entry.getWorkoutDate());
     }
 
@@ -79,7 +80,7 @@ public class WorkoutDateUnitTests {
     void shouldRemoveValidScheduleEntry() {
         ZonedDateTime dateTime = ZonedDateTime.now();
         ScheduleEntry entry = new ScheduleEntry(
-                1,
+                DayOfWeek.MONDAY,
                 dateTime,
                 workoutDate);
         workoutDate.addScheduleEntry(entry);
@@ -100,7 +101,7 @@ public class WorkoutDateUnitTests {
 
         ZonedDateTime dateTime = ZonedDateTime.now();
         ScheduleEntry entry = new ScheduleEntry(
-                1,
+                DayOfWeek.MONDAY,
                 dateTime,
                 newWorkoutDate);
         assertThrows(BusinessException.class, () -> workoutDate.removeScheduleEntry(entry));

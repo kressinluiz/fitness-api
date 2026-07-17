@@ -1,5 +1,6 @@
 package com.kressin.fitness_app.entity;
 
+import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 
 import com.kressin.fitness_app.exception.BusinessException;
@@ -23,15 +24,16 @@ public class ScheduleEntry {
     private WorkoutDate workoutDate;
 
     @Column(nullable = false)
-    private Integer weekDay;
+    private DayOfWeek weekDay;
+
     @Column(nullable = false)
     private ZonedDateTime dateTime;
 
     protected ScheduleEntry() {
     }
 
-    public ScheduleEntry(Integer weekDay, ZonedDateTime dateTime, WorkoutDate workoutDate) {
-        if (weekDay == null || weekDay < 0 || weekDay > 7) {
+    public ScheduleEntry(DayOfWeek weekDay, ZonedDateTime dateTime, WorkoutDate workoutDate) {
+        if (weekDay == null) {
             throw new BusinessException(String.format("Invalid WeekDay for ScheduleEntry: %d", weekDay));
         }
         if (dateTime == null) {
@@ -50,7 +52,7 @@ public class ScheduleEntry {
         return id;
     }
 
-    public Integer getWeekDay() {
+    public DayOfWeek getWeekDay() {
         return weekDay;
     }
 
@@ -62,8 +64,8 @@ public class ScheduleEntry {
         return workoutDate;
     }
 
-    public void setWeekDay(Integer weekDay) {
-        if (weekDay < 0 || weekDay > 7 || weekDay == null) {
+    public void setWeekDay(DayOfWeek weekDay) {
+        if (weekDay == null) {
             throw new BusinessException(String.format("Invalid WeekDay for ScheduleEntry: %d", weekDay));
         }
         this.weekDay = weekDay;
