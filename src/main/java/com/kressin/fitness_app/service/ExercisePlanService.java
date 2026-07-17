@@ -62,7 +62,7 @@ public class ExercisePlanService {
         ExercisePlan plan = exercisePlanRepo.findById(command.id())
                 .orElseThrow(() -> new ExercisePlanNotFoundException(command.id()));
 
-        if (command.exerciseId() != null && command.exerciseId() != plan.getExercise().getId()) {
+        if (command.exerciseId() != null && !command.exerciseId().equals(plan.getExercise().getId())) {
             plan.getExercise().removeExercisePlan(plan);
             Exercise exercise = exerciseRepo.findById(command.exerciseId())
                     .orElseThrow(() -> new BusinessException("Exercise ID must be valid"));
