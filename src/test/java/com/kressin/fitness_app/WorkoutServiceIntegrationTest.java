@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.kressin.fitness_app.dto.ExerciseResponse;
 import com.kressin.fitness_app.dto.WorkoutResponse;
 import com.kressin.fitness_app.exception.BusinessException;
 import com.kressin.fitness_app.exception.WorkoutNotFoundException;
+import com.kressin.fitness_app.repository.ExerciseRepository;
 import com.kressin.fitness_app.service.ExerciseService;
 import com.kressin.fitness_app.service.WorkoutService;
 import com.kressin.fitness_app.service.command.CreateExerciseCommand;
@@ -36,6 +38,9 @@ public class WorkoutServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     ExerciseService exerciseService;
+
+    @Autowired
+    ExerciseRepository exerciseRepo;
 
     List<CreateExerciseSetCommand> sets;
     List<CreateExercisePlanCommand> plans;
@@ -86,6 +91,11 @@ public class WorkoutServiceIntegrationTest extends AbstractIntegrationTest {
 
         pageable = PageRequest.of(0, 20);
         search = "";
+    }
+
+    @AfterEach
+    void cleanUp() {
+        exerciseRepo.deleteAll();
     }
 
     @Test
