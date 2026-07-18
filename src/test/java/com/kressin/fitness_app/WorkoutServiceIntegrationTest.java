@@ -322,7 +322,6 @@ public class WorkoutServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Transactional
     void shouldDeleteWorkout() {
         WorkoutResponse createResponse = workoutService.addWorkout(createCommand);
         workoutService.deleteWorkout(createResponse.id());
