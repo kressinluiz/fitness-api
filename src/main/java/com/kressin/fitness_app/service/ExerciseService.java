@@ -5,9 +5,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.kressin.fitness_app.dto.ExerciseResponse;
+import com.kressin.fitness_app.dto.UsageCountResponse;
 import com.kressin.fitness_app.entity.Exercise;
 import com.kressin.fitness_app.exception.ExerciseNotFoundException;
 import com.kressin.fitness_app.mapper.ExerciseMapper;
+import com.kressin.fitness_app.repository.ExercisePlanRepository;
 import com.kressin.fitness_app.repository.ExerciseRepository;
 import com.kressin.fitness_app.service.command.CreateExerciseCommand;
 import com.kressin.fitness_app.service.command.UpdateExerciseCommand;
@@ -17,9 +19,11 @@ import jakarta.transaction.Transactional;
 @Service
 public class ExerciseService {
     private final ExerciseRepository repository;
+    private final ExercisePlanRepository exercisePlanRepo;
 
-    public ExerciseService(ExerciseRepository repository) {
+    public ExerciseService(ExerciseRepository repository, ExercisePlanRepository exercisePlanRepo) {
         this.repository = repository;
+        this.exercisePlanRepo = exercisePlanRepo;
     }
 
     @Transactional
@@ -75,5 +79,11 @@ public class ExerciseService {
         }
 
         return page.map(ExerciseMapper::toResponse);
+    }
+
+    public UsageCountResponse countExerciseUsage(Long id) {
+        return new UsageCountResponse(
+                id,
+                exercisePlanRepo.countByExerciseId(id));
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kressin.fitness_app.dto.CreateExerciseRequest;
 import com.kressin.fitness_app.dto.ExerciseResponse;
 import com.kressin.fitness_app.dto.UpdateExerciseRequest;
+import com.kressin.fitness_app.dto.UsageCountResponse;
 import com.kressin.fitness_app.mapper.ExerciseMapper;
 import com.kressin.fitness_app.service.ExerciseService;
 
@@ -89,5 +90,15 @@ public class ExerciseController {
     public ResponseEntity<Void> deleteExercise(@PathVariable Long id) {
         service.deleteExercise(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Get exercise usage count")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Exercise found"),
+            @ApiResponse(responseCode = "404", description = "Exercise not found"),
+    })
+    @GetMapping("/{id}/usage")
+    public UsageCountResponse getUsageCount(@PathVariable Long id) {
+        return service.countExerciseUsage(id);
     }
 }

@@ -57,6 +57,7 @@ public class ExerciseSetServiceIntegrationTest extends AbstractIntegrationTest {
                 "");
         workoutRepository.save(workout);
         exercisePlan = new ExercisePlan(exercise, workout);
+        exercisePlan.setPosition(1);
         exercisePlanRepository.save(exercisePlan);
 
         reps = 10;

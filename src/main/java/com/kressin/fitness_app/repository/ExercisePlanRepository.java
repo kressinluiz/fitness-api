@@ -14,4 +14,6 @@ public interface ExercisePlanRepository extends JpaRepository<ExercisePlan, Long
                 where ep.workout.id = :workoutId
             """)
     Optional<Integer> findMaxPosition(Long workoutId);
+
+    long countByExerciseId(Long exerciseId);
 }
