@@ -1,13 +1,16 @@
 package com.kressin.fitness_app.service;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.kressin.fitness_app.dto.DashboardSummaryResponse;
 import com.kressin.fitness_app.dto.UpcomingWorkoutResponse;
+import com.kressin.fitness_app.entity.ScheduleEntry;
 import com.kressin.fitness_app.mapper.DashboardMapper;
 import com.kressin.fitness_app.repository.ExerciseRepository;
 import com.kressin.fitness_app.repository.ScheduleEntryRepository;
@@ -50,10 +53,28 @@ public class DashboardService {
 
     @Transactional
     public List<UpcomingWorkoutResponse> getUpcomingWorkouts() {
-        return DashboardMapper.toUpcomingWorkoutResponseList(
-                scheduleEntryRepository.findUpcomingWithWorkoutPlan(
-                        ZonedDateTime.now(),
-                        PageRequest.of(0, UPCOMING_WORKOUTS_LIMIT)));
+        ZonedDateTime now = ZonedDateTime.now();
+
+        Stream<UpcomingWorkoutResponse> specificDates = scheduleEntryRepository
+                .findUpcomingSpecificDates(now).stream()
+                .map(entry -> DashboardMapper.toUpcomingWorkoutResponse(entry, entry.getDateTime()));
+
+        Stream<UpcomingWorkoutResponse> recurring = scheduleEntryRepository
+                .findAllRecurring().stream()
+                .map(entry -> DashboardMapper.toUpcomingWorkoutResponse(entry, nextOccurrence(entry, now)));
+
+        return Stream.concat(specificDates, recurring)
+                .sorted(Comparator.comparing(UpcomingWorkoutResponse::dateTime))
+                .limit(UPCOMING_WORKOUTS_LIMIT)
+                .toList();
+    }
+
+    private ZonedDateTime nextOccurrence(ScheduleEntry entry, ZonedDateTime now) {
+        ZonedDateTime candidate = now
+                .with(entry.getDateTime().toLocalTime())
+                .with(TemporalAdjusters.nextOrSame(entry.getWeekDay()));
+
+        return candidate.isBefore(now) ? candidate.plusWeeks(1) : candidate;
     }
 
     @Transactional

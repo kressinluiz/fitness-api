@@ -1,5 +1,6 @@
 package com.kressin.fitness_app.mapper;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import com.kressin.fitness_app.dto.DashboardSummaryResponse;
@@ -7,17 +8,13 @@ import com.kressin.fitness_app.dto.UpcomingWorkoutResponse;
 import com.kressin.fitness_app.entity.ScheduleEntry;
 
 public class DashboardMapper {
-    public static UpcomingWorkoutResponse toUpcomingWorkoutResponse(ScheduleEntry entry) {
+    public static UpcomingWorkoutResponse toUpcomingWorkoutResponse(ScheduleEntry entry, ZonedDateTime dateTime) {
         return new UpcomingWorkoutResponse(
                 entry.getWorkoutDate().getWorkoutPlan().getId(),
                 entry.getWorkoutDate().getWorkoutPlan().getWorkout().getName(),
                 entry.getWorkoutDate().getScheduleType(),
                 entry.getWeekDay(),
-                entry.getDateTime());
-    }
-
-    public static List<UpcomingWorkoutResponse> toUpcomingWorkoutResponseList(List<ScheduleEntry> entries) {
-        return entries.stream().map(DashboardMapper::toUpcomingWorkoutResponse).toList();
+                dateTime);
     }
 
     public static DashboardSummaryResponse toSummaryResponse(
