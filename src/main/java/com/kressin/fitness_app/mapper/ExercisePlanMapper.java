@@ -13,6 +13,7 @@ public class ExercisePlanMapper {
     public static ExercisePlanResponse toResponse(ExercisePlan plan) {
         return new ExercisePlanResponse(
                 plan.getId(),
+                plan.getPosition(),
                 ExerciseMapper.toResponse(plan.getExercise()),
                 ExerciseSetMapper.toResponseList(plan.getSets()));
     }

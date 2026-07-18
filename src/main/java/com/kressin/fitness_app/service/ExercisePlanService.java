@@ -39,7 +39,10 @@ public class ExercisePlanService {
         Exercise exercise = exerciseRepo.findById(command.exerciseId())
                 .orElseThrow(() -> new BusinessException("Exercise ID must be valid"));
 
-        ExercisePlan plan = exercisePlanRepo.save(new ExercisePlan(exercise, workout));
+        ExercisePlan plan = new ExercisePlan(exercise, workout);
+        Integer nextPosition = exercisePlanRepo.findMaxPosition(workout.getId()).orElse(0) + 1;
+        plan.setPosition(nextPosition);
+        plan = exercisePlanRepo.save(plan);
 
         if (command.sets() != null) {
             for (CreateExerciseSetCommand createExerciseSetCommand : command.sets()) {

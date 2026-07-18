@@ -7,6 +7,7 @@ import java.util.List;
 import com.kressin.fitness_app.exception.BusinessException;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,8 +15,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "workout_id", "position" })
+})
 public class ExercisePlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +37,9 @@ public class ExercisePlan {
     @ManyToOne(optional = false)
     @JoinColumn(name = "workout_id", nullable = false)
     private Workout workout;
+
+    @Column(nullable = false)
+    private Integer position;
 
     protected ExercisePlan() {
     }
@@ -88,5 +97,16 @@ public class ExercisePlan {
             throw new BusinessException("ExercisePlan must have a valid Workout");
         }
         this.workout = workout;
+    }
+
+    public void setPosition(Integer position) {
+        if (position == null || position <= 0) {
+            throw new BusinessException("ExercisePlan must have a valid position");
+        }
+        this.position = position;
+    }
+
+    public Integer getPosition() {
+        return position;
     }
 }

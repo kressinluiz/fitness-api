@@ -1,18 +1,27 @@
 package com.kressin.fitness_app.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.kressin.fitness_app.dto.UpdateExercisePlansOrderCommand;
 import com.kressin.fitness_app.dto.WorkoutResponse;
 import com.kressin.fitness_app.entity.ExercisePlan;
 import com.kressin.fitness_app.entity.Workout;
 import com.kressin.fitness_app.entity.WorkoutPlan;
+import com.kressin.fitness_app.exception.BusinessException;
 import com.kressin.fitness_app.exception.WorkoutNotFoundException;
 import com.kressin.fitness_app.mapper.ExercisePlanMapper;
 import com.kressin.fitness_app.mapper.WorkoutMapper;
+import com.kressin.fitness_app.repository.ExercisePlanRepository;
 import com.kressin.fitness_app.repository.WorkoutRepository;
 import com.kressin.fitness_app.service.command.CreateExercisePlanCommand;
 import com.kressin.fitness_app.service.command.CreateWorkoutCommand;
@@ -26,12 +35,14 @@ public class WorkoutService {
     private final WorkoutRepository workoutRepo;
     private final ExercisePlanService exercisePlanService;
     private final WorkoutPlanService workoutPlanService;
+    private final ExercisePlanRepository exercisePlanRepo;
 
     public WorkoutService(WorkoutRepository workoutRepo, ExercisePlanService exercisePlanService,
-            WorkoutPlanService workoutPlanService) {
+            WorkoutPlanService workoutPlanService, ExercisePlanRepository exercisePlanRepo) {
         this.workoutRepo = workoutRepo;
         this.exercisePlanService = exercisePlanService;
         this.workoutPlanService = workoutPlanService;
+        this.exercisePlanRepo = exercisePlanRepo;
     }
 
     @Transactional
@@ -106,5 +117,39 @@ public class WorkoutService {
         }
 
         workoutRepo.deleteById(id);
+    }
+
+    @Transactional
+    public WorkoutResponse updateWorkoutExercisePlansOrder(UpdateExercisePlansOrderCommand command) {
+        Workout workout = workoutRepo.findById(command.workoutId())
+                .orElseThrow(() -> new WorkoutNotFoundException(command.workoutId()));
+
+        List<ExercisePlan> exercisePlans = workout.getExercisePlans();
+
+        if (command.exercisePlanIds().size() != exercisePlans.size()) {
+            throw new BusinessException("The request must contain all exercise plans.");
+        }
+
+        Set<Long> uniqueIds = new HashSet<>(command.exercisePlanIds());
+
+        if (uniqueIds.size() != command.exercisePlanIds().size()) {
+            throw new BusinessException("Duplicate exercise plan ids.");
+        }
+
+        Set<Long> existingIds = exercisePlans.stream().map(ExercisePlan::getId).collect(Collectors.toSet());
+        if (!existingIds.containsAll(command.exercisePlanIds())) {
+            throw new BusinessException("One or more exercise plans do not belong to the workout.");
+        }
+
+        Map<Long, ExercisePlan> plansById = exercisePlans.stream()
+                .collect(Collectors.toMap(ExercisePlan::getId, Function.identity()));
+
+        for (int i = 0; i < command.exercisePlanIds().size(); i++) {
+            Long id = command.exercisePlanIds().get(i);
+            ExercisePlan plan = plansById.get(id);
+            plan.setPosition(i + 1);
+        }
+
+        return WorkoutMapper.toResponse(workout);
     }
 }

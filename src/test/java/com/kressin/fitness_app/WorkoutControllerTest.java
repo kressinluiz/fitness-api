@@ -1,5 +1,6 @@
 package com.kressin.fitness_app;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -258,5 +259,106 @@ public class WorkoutControllerTest extends AbstractIntegrationTest {
                         }
                         """))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldUpdateExercisePlansOrder() throws Exception {
+        MvcResult workoutResult = mockMvc.perform(post("/workouts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                            {
+                                "name":"Nome do Workout",
+                                "description":"Descrição do Workout",
+                                "exercisePlans":[
+                                    {
+                                        "exerciseId":%d,
+                                        "sets": [
+                                            {
+                                                "reps":10,
+                                                "weight":50
+                                            },
+                                            {
+                                                "reps":8,
+                                                "weight":60
+                                            },
+                                            {
+                                                "reps":6,
+                                                "weight":70
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "exerciseId":%d,
+                                        "sets": [
+                                            {
+                                                "reps":10,
+                                                "weight":50
+                                            },
+                                            {
+                                                "reps":8,
+                                                "weight":60
+                                            },
+                                            {
+                                                "reps":6,
+                                                "weight":70
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "exerciseId":%d,
+                                        "sets": [
+                                            {
+                                                "reps":10,
+                                                "weight":50
+                                            },
+                                            {
+                                                "reps":8,
+                                                "weight":60
+                                            },
+                                            {
+                                                "reps":6,
+                                                "weight":70
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        """.formatted(exerciseId, exerciseId, exerciseId)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        WorkoutResponse createdWorkout = objectMapper.readValue(
+                workoutResult.getResponse().getContentAsString(),
+                WorkoutResponse.class);
+
+        for (int i = 0; i < createdWorkout.exercisePlans().size(); i++) {
+            assertEquals(i + 1, createdWorkout.exercisePlans().get(i).position());
+        }
+
+        Long workoutId = createdWorkout.id();
+        workoutResult = mockMvc.perform(patch("/workouts/" + workoutId + "/exercise-plans/order")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                            {
+                                "exercisePlanIds":
+                                [
+                                    %d,
+                                    %d,
+                                    %d
+                                ]
+                            }
+                        """.formatted(createdWorkout.exercisePlans().get(2).id(),
+                        createdWorkout.exercisePlans().get(1).id(),
+                        createdWorkout.exercisePlans().get(0).id())))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        WorkoutResponse updatedWorkout = objectMapper.readValue(
+                workoutResult.getResponse().getContentAsString(),
+                WorkoutResponse.class);
+        for (int i = 0; i < updatedWorkout.exercisePlans().size(); i++) {
+            assertEquals(updatedWorkout.exercisePlans().size() - i,
+                    updatedWorkout.exercisePlans().get(i).position());
+        }
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kressin.fitness_app.dto.CreateWorkoutRequest;
+import com.kressin.fitness_app.dto.UpdateExercisePlansOrderRequest;
 import com.kressin.fitness_app.dto.UpdateWorkoutRequest;
 import com.kressin.fitness_app.dto.WorkoutResponse;
 import com.kressin.fitness_app.mapper.WorkoutMapper;
@@ -89,5 +90,16 @@ public class WorkoutController {
     public ResponseEntity<Void> deleteWorkout(@PathVariable Long id) {
         service.deleteWorkout(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Update exercise plans order for an specific workout")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Workout updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid request"),
+            @ApiResponse(responseCode = "404", description = "Workout not found"),
+    })
+    @PatchMapping("/{id}/exercise-plans/order")
+    public WorkoutResponse updateWorkout(@PathVariable Long id, @RequestBody UpdateExercisePlansOrderRequest request) {
+        return service.updateWorkoutExercisePlansOrder(WorkoutMapper.toUpdateCommand(id, request));
     }
 }

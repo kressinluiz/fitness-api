@@ -3,6 +3,8 @@ package com.kressin.fitness_app.mapper;
 import java.util.List;
 
 import com.kressin.fitness_app.dto.CreateWorkoutRequest;
+import com.kressin.fitness_app.dto.UpdateExercisePlansOrderCommand;
+import com.kressin.fitness_app.dto.UpdateExercisePlansOrderRequest;
 import com.kressin.fitness_app.dto.UpdateWorkoutRequest;
 import com.kressin.fitness_app.dto.WorkoutResponse;
 import com.kressin.fitness_app.entity.Workout;
@@ -37,5 +39,11 @@ public class WorkoutMapper {
                 workout.description() != null ? workout.description() : null,
                 workout.exercisePlans() != null ? ExercisePlanMapper.toUpdateCommandList(workout.exercisePlans())
                         : null);
+    }
+
+    public static UpdateExercisePlansOrderCommand toUpdateCommand(Long id, UpdateExercisePlansOrderRequest request) {
+        return new UpdateExercisePlansOrderCommand(
+                id,
+                request.exercisePlanIds());
     }
 }
