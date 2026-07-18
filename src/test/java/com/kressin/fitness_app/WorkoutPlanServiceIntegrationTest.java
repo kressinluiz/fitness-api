@@ -13,6 +13,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.kressin.fitness_app.dto.WorkoutPlanResponse;
 import com.kressin.fitness_app.entity.ScheduleType;
@@ -46,6 +49,8 @@ public class WorkoutPlanServiceIntegrationTest extends AbstractIntegrationTest {
     ScheduleType scheduleType;
     List<CreateScheduleEntryCommand> entries;
     Workout workout;
+    Pageable pageable;
+    String search;
 
     @BeforeEach
     void setUp() {
@@ -77,6 +82,9 @@ public class WorkoutPlanServiceIntegrationTest extends AbstractIntegrationTest {
         createCommand = new CreateWorkoutPlanCommand(
                 workout.getId(),
                 createWorkoutDateCommand);
+
+        pageable = PageRequest.of(0, 20);
+        search = "";
     }
 
     @AfterEach
@@ -142,16 +150,16 @@ public class WorkoutPlanServiceIntegrationTest extends AbstractIntegrationTest {
         WorkoutPlanResponse secondWorkoutPlan = workoutPlanService.addWorkoutPlan(createCommand);
         WorkoutPlanResponse thirdWorkoutPlan = workoutPlanService.addWorkoutPlan(createCommand);
 
-        List<WorkoutPlanResponse> getAllResponse = workoutPlanService.getAllWorkoutPlans();
+        Page<WorkoutPlanResponse> getAllResponse = workoutPlanService.getAllWorkoutPlans(pageable, search);
 
-        assertEquals(firstWorkoutPlan.id(), getAllResponse.get(0).id());
-        assertEquals(secondWorkoutPlan.id(), getAllResponse.get(1).id());
-        assertEquals(thirdWorkoutPlan.id(), getAllResponse.get(2).id());
+        assertEquals(firstWorkoutPlan.id(), getAllResponse.getContent().get(0).id());
+        assertEquals(secondWorkoutPlan.id(), getAllResponse.getContent().get(1).id());
+        assertEquals(thirdWorkoutPlan.id(), getAllResponse.getContent().get(2).id());
     }
 
     @Test
     void shouldReturnEmptyListWhenDatabaseIsEmpty() {
-        assertEquals(0, workoutPlanService.getAllWorkoutPlans().size());
+        assertEquals(0, workoutPlanService.getAllWorkoutPlans(pageable, search).getTotalElements());
     }
 
     @Test

@@ -4,11 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.kressin.fitness_app.dto.ExerciseResponse;
 import com.kressin.fitness_app.exception.BusinessException;
@@ -29,6 +30,8 @@ public class ExerciseServiceIntegrationTest extends AbstractIntegrationTest {
     private String description;
     private String category;
     private String muscleGroup;
+    Pageable pageable;
+    String search;
 
     @BeforeEach
     void setUp() {
@@ -36,6 +39,8 @@ public class ExerciseServiceIntegrationTest extends AbstractIntegrationTest {
         description = "Descrição do Exercício de Teste";
         category = "Categoria do Exercício de Teste";
         muscleGroup = "Grupo do Exercício de Teste";
+        pageable = PageRequest.of(0, 20);
+        search = "";
     }
 
     @Test
@@ -63,7 +68,7 @@ public class ExerciseServiceIntegrationTest extends AbstractIntegrationTest {
                 category,
                 muscleGroup);
         assertThrows(BusinessException.class, () -> exerciseService.addExercise(invalidCommand));
-        assertEquals(0, exerciseService.getAllExercises().size());
+        assertEquals(0, exerciseService.getAllExercises(pageable, search).getTotalElements());
     }
 
     @Test
@@ -74,7 +79,7 @@ public class ExerciseServiceIntegrationTest extends AbstractIntegrationTest {
                 category,
                 muscleGroup);
         assertThrows(BusinessException.class, () -> exerciseService.addExercise(invalidCommand));
-        assertEquals(0, exerciseService.getAllExercises().size());
+        assertEquals(0, exerciseService.getAllExercises(pageable, search).getTotalElements());
     }
 
     @Test
@@ -85,7 +90,7 @@ public class ExerciseServiceIntegrationTest extends AbstractIntegrationTest {
                 category,
                 muscleGroup);
         assertThrows(BusinessException.class, () -> exerciseService.addExercise(invalidCommand));
-        assertEquals(0, exerciseService.getAllExercises().size());
+        assertEquals(0, exerciseService.getAllExercises(pageable, search).getTotalElements());
     }
 
     @Test
@@ -96,7 +101,7 @@ public class ExerciseServiceIntegrationTest extends AbstractIntegrationTest {
                 null,
                 muscleGroup);
         assertThrows(BusinessException.class, () -> exerciseService.addExercise(invalidCommand));
-        assertEquals(0, exerciseService.getAllExercises().size());
+        assertEquals(0, exerciseService.getAllExercises(pageable, search).getTotalElements());
     }
 
     @Test
@@ -107,7 +112,7 @@ public class ExerciseServiceIntegrationTest extends AbstractIntegrationTest {
                 category,
                 null);
         assertThrows(BusinessException.class, () -> exerciseService.addExercise(invalidCommand));
-        assertEquals(0, exerciseService.getAllExercises().size());
+        assertEquals(0, exerciseService.getAllExercises(pageable, search).getTotalElements());
     }
 
     @Test
@@ -316,7 +321,7 @@ public class ExerciseServiceIntegrationTest extends AbstractIntegrationTest {
 
         assertThrows(ExerciseNotFoundException.class,
                 () -> exerciseService.getExercise(createResponse.id()));
-        assertEquals(0, exerciseService.getAllExercises().size());
+        assertEquals(0, exerciseService.getAllExercises(pageable, search).getTotalElements());
     }
 
     @Test
@@ -359,17 +364,16 @@ public class ExerciseServiceIntegrationTest extends AbstractIntegrationTest {
         ExerciseResponse secondCreateResponse = exerciseService.addExercise(validCommand);
         ExerciseResponse thirdCreateResponse = exerciseService.addExercise(validCommand);
 
-        List<ExerciseResponse> getAllResponse = exerciseService.getAllExercises();
-        assertEquals(3, getAllResponse.size());
-        assertEquals(firstCreateResponse.id(), getAllResponse.get(0).id());
-        assertEquals(secondCreateResponse.id(), getAllResponse.get(1).id());
-        assertEquals(thirdCreateResponse.id(), getAllResponse.get(2).id());
+        Page<ExerciseResponse> getAllResponse = exerciseService.getAllExercises(pageable, search);
+        assertEquals(3, getAllResponse.getTotalElements());
+        assertEquals(firstCreateResponse.id(), getAllResponse.getContent().get(0).id());
+        assertEquals(secondCreateResponse.id(), getAllResponse.getContent().get(1).id());
+        assertEquals(thirdCreateResponse.id(), getAllResponse.getContent().get(2).id());
     }
 
     @Test
     void shouldReturnEmptyListWhenGetAllExercisesAndDatabseIsEmpty() {
-        List<ExerciseResponse> getAllResponse = exerciseService.getAllExercises();
-        assertEquals(0, getAllResponse.size());
+        assertEquals(0, exerciseService.getAllExercises(pageable, search).getTotalElements());
     }
 
 }

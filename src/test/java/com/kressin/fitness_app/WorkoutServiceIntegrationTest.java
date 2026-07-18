@@ -11,6 +11,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.kressin.fitness_app.dto.ExerciseResponse;
 import com.kressin.fitness_app.dto.WorkoutResponse;
@@ -40,6 +43,8 @@ public class WorkoutServiceIntegrationTest extends AbstractIntegrationTest {
     CreateExerciseCommand createExerciseCommand;
     String name;
     String description;
+    Pageable pageable;
+    String search;
 
     @BeforeEach
     void setUp() {
@@ -78,6 +83,9 @@ public class WorkoutServiceIntegrationTest extends AbstractIntegrationTest {
                 name,
                 description,
                 plans);
+
+        pageable = PageRequest.of(0, 20);
+        search = "";
     }
 
     @Test
@@ -121,7 +129,7 @@ public class WorkoutServiceIntegrationTest extends AbstractIntegrationTest {
                 description,
                 plans);
         assertThrows(BusinessException.class, () -> workoutService.addWorkout(createCommand));
-        assertEquals(0, workoutService.getAllWorkouts().size());
+        assertEquals(0, workoutService.getAllWorkouts(pageable, search).getTotalElements());
     }
 
     @Test
@@ -300,18 +308,17 @@ public class WorkoutServiceIntegrationTest extends AbstractIntegrationTest {
         WorkoutResponse secondWorkout = workoutService.addWorkout(createCommand);
         WorkoutResponse thirdWorkout = workoutService.addWorkout(createCommand);
 
-        List<WorkoutResponse> getAllResponse = workoutService.getAllWorkouts();
-        assertEquals(3, getAllResponse.size());
-        assertEquals(firstWorkout.id(), getAllResponse.get(0).id());
-        assertEquals(secondWorkout.id(), getAllResponse.get(1).id());
-        assertEquals(thirdWorkout.id(), getAllResponse.get(2).id());
+        Page<WorkoutResponse> getAllResponse = workoutService.getAllWorkouts(pageable, search);
+        assertEquals(3, getAllResponse.getTotalElements());
+        assertEquals(firstWorkout.id(), getAllResponse.getContent().get(0).id());
+        assertEquals(secondWorkout.id(), getAllResponse.getContent().get(1).id());
+        assertEquals(thirdWorkout.id(), getAllResponse.getContent().get(2).id());
     }
 
     @Test
     @Transactional
     void shouldGetEmptyListWhenDatabaseIsEmpty() {
-        List<WorkoutResponse> allWorkouts = workoutService.getAllWorkouts();
-        assertEquals(0, allWorkouts.size());
+        assertEquals(0, workoutService.getAllWorkouts(pageable, search).getTotalElements());
     }
 
     @Test
@@ -320,7 +327,7 @@ public class WorkoutServiceIntegrationTest extends AbstractIntegrationTest {
         WorkoutResponse createResponse = workoutService.addWorkout(createCommand);
         workoutService.deleteWorkout(createResponse.id());
         assertThrows(WorkoutNotFoundException.class, () -> workoutService.getWorkout(createResponse.id()));
-        assertEquals(0, workoutService.getAllWorkouts().size());
+        assertEquals(0, workoutService.getAllWorkouts(pageable, search).getTotalElements());
     }
 
     @Test

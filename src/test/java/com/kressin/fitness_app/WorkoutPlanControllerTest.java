@@ -199,7 +199,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
-                                "workoutId":%d,
+                                "workoutId":%d
                             }
                         """.formatted(workoutId)));
     }
