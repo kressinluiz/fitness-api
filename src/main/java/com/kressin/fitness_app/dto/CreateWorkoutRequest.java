@@ -10,5 +10,5 @@ import jakarta.validation.constraints.Size;
 public record CreateWorkoutRequest(
         @NotBlank @Size(min = 1, max = 100) String name,
         @NotNull @Size(min = 1, max = 500) String description,
-        @Valid List<CreateExercisePlanRequest> exercisePlans) {
+        List<@Valid CreateExercisePlanRequest> exercisePlans) {
 }

@@ -7,5 +7,5 @@ import jakarta.validation.constraints.NotNull;
 
 public record CreateExercisePlanRequest(
         @NotNull Long exerciseId,
-        @Valid List<CreateExerciseSetRequest> sets) {
+        List<@Valid CreateExerciseSetRequest> sets) {
 }

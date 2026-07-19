@@ -8,5 +8,5 @@ public record UpdateExercisePlanRequest(
         Long id,
         Boolean shouldDelete,
         Long exerciseId,
-        @Valid List<UpdateExerciseSetRequest> sets) {
+        List<@Valid UpdateExerciseSetRequest> sets) {
 }

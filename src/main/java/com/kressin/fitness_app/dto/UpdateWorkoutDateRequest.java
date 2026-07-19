@@ -10,6 +10,6 @@ import jakarta.validation.constraints.NotNull;
 public record UpdateWorkoutDateRequest(
         @NotNull Long id,
         ScheduleType scheduleType,
-        @Valid List<UpdateScheduleEntryRequest> scheduleEntries) {
+        List<@Valid UpdateScheduleEntryRequest> scheduleEntries) {
 
 }
