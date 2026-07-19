@@ -30,7 +30,7 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldCreateExercise() throws Exception {
-        mockMvc.perform(post("/exercises")
+        mockMvc.perform(post("/api/v1/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -47,7 +47,7 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldThrowWithBlankName() throws Exception {
-        mockMvc.perform(post("/exercises")
+        mockMvc.perform(post("/api/v1/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -62,7 +62,7 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldThrowWithNullDescription() throws Exception {
-        mockMvc.perform(post("/exercises")
+        mockMvc.perform(post("/api/v1/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -76,7 +76,7 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldGetExercise() throws Exception {
-        MvcResult result = mockMvc.perform(post("/exercises")
+        MvcResult result = mockMvc.perform(post("/api/v1/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -95,7 +95,7 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
 
         Long id = createdExercise.id();
 
-        mockMvc.perform(get("/exercises/" + id)
+        mockMvc.perform(get("/api/v1/exercises/" + id)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name")
@@ -105,14 +105,14 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
     @Test
     void shouldThrowWithGetInvalidID() throws Exception {
         Long invalidID = 333L;
-        mockMvc.perform(get("/exercises/" + invalidID)
+        mockMvc.perform(get("/api/v1/exercises/" + invalidID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void shouldDeleteExercise() throws Exception {
-        MvcResult result = mockMvc.perform(post("/exercises")
+        MvcResult result = mockMvc.perform(post("/api/v1/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -131,7 +131,7 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
 
         Long id = createdExercise.id();
 
-        mockMvc.perform(delete("/exercises/" + id)
+        mockMvc.perform(delete("/api/v1/exercises/" + id)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -139,14 +139,14 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
     @Test
     void shouldThrowWithDeleteInvalidID() throws Exception {
         Long invalidID = 333L;
-        mockMvc.perform(delete("/exercises/" + invalidID)
+        mockMvc.perform(delete("/api/v1/exercises/" + invalidID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void shouldUpdateExercise() throws Exception {
-        MvcResult result = mockMvc.perform(post("/exercises")
+        MvcResult result = mockMvc.perform(post("/api/v1/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -165,7 +165,7 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
 
         Long id = createdExercise.id();
 
-        mockMvc.perform(patch("/exercises/" + id)
+        mockMvc.perform(patch("/api/v1/exercises/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -179,7 +179,7 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldThrowWithUpdateInvalidName() throws Exception {
-        MvcResult result = mockMvc.perform(post("/exercises")
+        MvcResult result = mockMvc.perform(post("/api/v1/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -198,7 +198,7 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
 
         Long id = createdExercise.id();
 
-        mockMvc.perform(patch("/exercises/" + id)
+        mockMvc.perform(patch("/api/v1/exercises/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -210,7 +210,7 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldThrowWithUpdateInvalidExercise() throws Exception {
-        MvcResult result = mockMvc.perform(post("/exercises")
+        MvcResult result = mockMvc.perform(post("/api/v1/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -229,7 +229,7 @@ public class ExerciseControllerTest extends AbstractIntegrationTest {
 
         Long id = createdExercise.id() + 1;
 
-        mockMvc.perform(patch("/exercises/" + id)
+        mockMvc.perform(patch("/api/v1/exercises/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {

@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/workouts")
+@RequestMapping("/api/v1/workouts")
 @Tag(name = "Workouts", description = "Workout management")
 public class WorkoutController {
     private final WorkoutService service;

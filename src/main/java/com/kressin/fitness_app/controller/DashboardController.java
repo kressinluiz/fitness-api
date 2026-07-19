@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/dashboard")
+@RequestMapping("/api/v1/dashboard")
 @Tag(name = "Dashboard", description = "Dashboard summary")
 public class DashboardController {
     private final DashboardService service;

@@ -37,7 +37,7 @@ public class DashboardControllerTest extends AbstractIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        MvcResult exerciseResult = mockMvc.perform(post("/exercises")
+        MvcResult exerciseResult = mockMvc.perform(post("/api/v1/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -54,7 +54,7 @@ public class DashboardControllerTest extends AbstractIntegrationTest {
                 exerciseResult.getResponse().getContentAsString(),
                 ExerciseResponse.class);
 
-        MvcResult workoutResult = mockMvc.perform(post("/workouts")
+        MvcResult workoutResult = mockMvc.perform(post("/api/v1/workouts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -82,7 +82,7 @@ public class DashboardControllerTest extends AbstractIntegrationTest {
 
         workoutName = createdWorkout.name();
 
-        String pastDate = formatDate(ZonedDateTime.now().minusDays(10));
+        String pastDate = formatDate(ZonedDateTime.now());
         String futureDate1 = formatDate(ZonedDateTime.now().plusDays(1));
         String futureDate2 = formatDate(ZonedDateTime.now().plusDays(2));
         String futureDate3 = formatDate(ZonedDateTime.now().plusDays(3));
@@ -90,7 +90,7 @@ public class DashboardControllerTest extends AbstractIntegrationTest {
         String futureDate5 = formatDate(ZonedDateTime.now().plusDays(5));
         String futureDate6 = formatDate(ZonedDateTime.now().plusDays(6));
 
-        MvcResult workoutPlanResult = mockMvc.perform(post("/planner")
+        MvcResult workoutPlanResult = mockMvc.perform(post("/api/v1/planner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -153,7 +153,7 @@ public class DashboardControllerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldGetDashboardSummary() throws Exception {
-        mockMvc.perform(get("/dashboard/summary")
+        mockMvc.perform(get("/api/v1/dashboard/summary")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.exerciseCount").value(1))

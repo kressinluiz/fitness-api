@@ -37,7 +37,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        MvcResult result = mockMvc.perform(post("/exercises")
+        MvcResult result = mockMvc.perform(post("/api/v1/exercises")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -56,7 +56,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
 
         Long exerciseId = createdExercise.id();
 
-        MvcResult workoutResult = mockMvc.perform(post("/workouts")
+        MvcResult workoutResult = mockMvc.perform(post("/api/v1/workouts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -92,7 +92,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
 
         workoutId = createdWorkout.id();
 
-        MvcResult workoutPlanResult = mockMvc.perform(post("/planner")
+        MvcResult workoutPlanResult = mockMvc.perform(post("/api/v1/planner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -131,7 +131,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldCreateWorkoutPlan() throws Exception {
-        mockMvc.perform(post("/planner")
+        mockMvc.perform(post("/api/v1/planner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -165,7 +165,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
     @Test
     void shouldThrowWithInvalidWorkoutID() throws Exception {
         Long invalidID = workoutId + 1;
-        mockMvc.perform(post("/planner")
+        mockMvc.perform(post("/api/v1/planner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -195,7 +195,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldThrowWithNullWorkoutDate() throws Exception {
-        mockMvc.perform(post("/planner")
+        mockMvc.perform(post("/api/v1/planner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
@@ -206,7 +206,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldGetWorkout() throws Exception {
-        mockMvc.perform(get("/planner/" + createdWorkoutPlanID)
+        mockMvc.perform(get("/api/v1/planner/" + createdWorkoutPlanID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.workout.name")
@@ -216,14 +216,14 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
     @Test
     void shouldThrowWithGetInvalidID() throws Exception {
         Long invalidID = createdWorkoutPlanID + 1;
-        mockMvc.perform(get("/planner/" + invalidID)
+        mockMvc.perform(get("/api/v1/planner/" + invalidID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void shouldDeleteWorkout() throws Exception {
-        mockMvc.perform(delete("/planner/" + createdWorkoutPlanID)
+        mockMvc.perform(delete("/api/v1/planner/" + createdWorkoutPlanID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
@@ -231,14 +231,14 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
     @Test
     void shouldThrowWithDeleteInvalidID() throws Exception {
         Long invalidID = createdWorkoutPlanID + 1;
-        mockMvc.perform(delete("/planner/" + invalidID)
+        mockMvc.perform(delete("/api/v1/planner/" + invalidID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void shouldUpdateWorkoutPlan() throws Exception {
-        mockMvc.perform(patch("/planner/" + createdWorkoutPlanID)
+        mockMvc.perform(patch("/api/v1/planner/" + createdWorkoutPlanID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -257,7 +257,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
     @Test
     void shouldThrowWithUpdateInvalidWorkoutID() throws Exception {
         Long randomID = createdWorkoutPlanID + 1;
-        mockMvc.perform(patch("/planner/" + createdWorkoutPlanID)
+        mockMvc.perform(patch("/api/v1/planner/" + createdWorkoutPlanID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -271,7 +271,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
     void shouldThrowWithUpdateInvalidWorkoutPlan() throws Exception {
         Long invalidID = createdWorkoutPlanID + 1;
 
-        mockMvc.perform(patch("/planner/" + invalidID)
+        mockMvc.perform(patch("/api/v1/planner/" + invalidID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                             {
