@@ -2,12 +2,12 @@ package com.kressin.fitness_app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 @SpringBootApplication
+@EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 public class FitnessAppApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(FitnessAppApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(FitnessAppApplication.class, args);
+    }
 }
