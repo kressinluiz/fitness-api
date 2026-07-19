@@ -82,7 +82,7 @@ public class DashboardControllerTest extends AbstractIntegrationTest {
 
         workoutName = createdWorkout.name();
 
-        String pastDate = formatDate(ZonedDateTime.now());
+        String currentDate = formatDate(ZonedDateTime.now().plusMinutes(1));
         String futureDate1 = formatDate(ZonedDateTime.now().plusDays(1));
         String futureDate2 = formatDate(ZonedDateTime.now().plusDays(2));
         String futureDate3 = formatDate(ZonedDateTime.now().plusDays(3));
@@ -134,7 +134,7 @@ public class DashboardControllerTest extends AbstractIntegrationTest {
                             }
                         """.formatted(
                         createdWorkout.id(),
-                        pastDate,
+                        currentDate,
                         futureDate1,
                         futureDate2,
                         futureDate3,

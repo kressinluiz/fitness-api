@@ -7,6 +7,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +95,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
 
         workoutId = createdWorkout.id();
 
+        String currentDate = formatDate(ZonedDateTime.now().plusMinutes(1));
         MvcResult workoutPlanResult = mockMvc.perform(post("/api/v1/planner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -105,20 +109,20 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
                                     [
                                         {
                                             "weekDay":1,
-                                            "dateTime":"2026-07-11T13:48:54.365Z"
+                                            "dateTime":"%s"
                                         },
                                         {
                                             "weekDay":2,
-                                            "dateTime":"2026-07-11T13:48:54.365Z"
+                                            "dateTime":"%s"
                                         },
                                         {
                                             "weekDay":3,
-                                            "dateTime":"2026-07-11T13:48:54.365Z"
+                                            "dateTime":"%s"
                                         }
                                     ]
                                 }
                             }
-                        """.formatted(workoutId)))
+                        """.formatted(workoutId, currentDate, currentDate, currentDate)))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -131,6 +135,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldCreateWorkoutPlan() throws Exception {
+        String currentDate = formatDate(ZonedDateTime.now().plusMinutes(1));
         mockMvc.perform(post("/api/v1/planner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -143,20 +148,20 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
                                     [
                                         {
                                             "weekDay":1,
-                                            "dateTime":"2026-07-11T13:48:54.365Z"
+                                            "dateTime":"%s"
                                         },
                                         {
                                             "weekDay":2,
-                                            "dateTime":"2026-07-11T13:48:54.365Z"
+                                            "dateTime":"%s"
                                         },
                                         {
                                             "weekDay":3,
-                                            "dateTime":"2026-07-11T13:48:54.365Z"
+                                            "dateTime":"%s"
                                         }
                                     ]
                                 }
                             }
-                        """.formatted(workoutId)))
+                        """.formatted(workoutId, currentDate, currentDate, currentDate)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.workout.name")
                         .value("Nome do Workout"));
@@ -281,4 +286,7 @@ public class WorkoutPlanControllerTest extends AbstractIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
+    private static String formatDate(ZonedDateTime dateTime) {
+        return dateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    }
 }
